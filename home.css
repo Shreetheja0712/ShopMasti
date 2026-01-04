@@ -1,0 +1,181 @@
+
+*{
+    color:white;
+    flex-grow:1;
+    flex-shrink:1;
+}
+/* @media (min-width:300px) and (max-width:600px){
+    #searchbox{
+        width:150px;
+    }
+    flex-shrink: 1;
+} */
+ a{
+    text-decoration: none;
+ }
+body{
+    background-color:
+       #E8F5E9;
+    margin:0px;
+    background-size:cover;
+    background-repeat:no-repeat;
+    font-family: Arial, Helvetica, sans-serif;
+    padding:0px;
+}
+#bar1{
+    margin-top: 0px;
+    border:0px;
+    height:75px;
+ background-color:#131921;
+ display:flex;
+ flex-direction:row;
+ justify-content: space-between;
+ 
+}
+#name{
+    font-size:30px;
+    margin-left:20px;
+    margin-top:10px;
+}
+#name:hover{
+    height:50px;
+   text-align: center;
+   border:2px solid white;  
+}
+#offer{
+    font-size:25px;
+     text-align: center;
+    margin-right:10px;
+    margin-top:15px;
+}
+#offer:hover{
+    height:35px;
+    width:50px;
+    border:2px solid white;
+}
+#searchdiv{
+  
+    margin-top:20px;
+}
+#event{
+    font-size:25px;
+     text-align: center;
+    margin-right:20px;
+    margin-top:15px;
+}
+#login{
+    font-size:25px;
+     text-align: center;
+    margin-right:20px;
+    margin-top:15px;
+}
+#cart{
+    font-size:25px;
+     text-align: center;
+    margin-right:40px;
+    margin-top:15px;
+}
+#event:hover{
+    height:33px;
+    width:58px;
+    border:2px solid white;
+}
+#login:hover{
+    height:30px;
+    width:50px;
+    border:2px solid white;
+}
+#cart:hover{
+    height:30px;
+    width:40px;
+    border:2px solid white;
+}
+#searchbox{
+    width:400px;
+    height:30px;
+    border-radius:5px;
+}
+#bar2{
+    display:flex;
+    height: 25px;
+    background-color: #37474F;
+    flex-direction:row;
+    /* justify-content: space-between; */
+}
+#all{
+    font-size: medium;
+    text-decoration: none;
+    /* margin-right: 200px; */
+}
+#mt{
+     font-size: normal;
+}
+#fashion{
+    font-size: medium;
+}
+#electronics{
+    font-size: medium;
+}
+#hk{
+    font-size: medium;
+}
+#bp{
+     font-size: medium;
+}
+#all:hover{
+    height:21px;
+    border:3px solid white;
+}
+#mt:hover{
+    height:21px;
+    border:3px solid white;
+}
+#fashion:hover{
+    height:21px;
+    border:3px solid white;
+}
+#electronics:hover{
+    height:21px;
+    border:3px solid white;
+}
+#hk:hover{
+    height:21px;
+    border:3px solid white;
+}
+#bp:hover{
+    height:21px;
+    border:3px solid white;
+}
+#display{
+    border:90px solid burlywood;
+}
+#foot{
+    /* z-index: 999; */
+    background-color:#131921;
+    color:black;
+     text-align: center;
+    padding:10px;
+    margin-top:800px; 
+}
+#last{
+    font-size:32px;
+}
+.menu-btn {
+    margin-right: 2px;
+    margin-bottom: 2px;
+  width: 1px;
+  height: 1px;
+  cursor: pointer;
+  padding: 2px;
+  background-color:#37474F;
+}
+.menu-btn span {
+  display: flex;
+  justify-content: space-between;
+  width:23px;
+  height: 1px;
+  background-color:white;
+  margin: 6px ;
+  margin-right: 0px;
+  border-radius: 2px;
+}
