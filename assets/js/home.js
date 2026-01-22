@@ -4,3 +4,6 @@ function openLogin() {
 function closeLogin() {
     document.getElementById("loginPopUp").style.display = "none";
 }
+function display(){
+    document.getElementsByClassName("detail").style.display="flex";
+}
