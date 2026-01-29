@@ -307,4 +307,13 @@ body{
 }
 .detail{
     display: none;
+    
+}
+#detailb{
+    background-color: #131921;
+}
+.list{
+    display:flex;
+    text-decoration: none;
+    top:50%;
 }
