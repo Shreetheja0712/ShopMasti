@@ -41,7 +41,7 @@ function Login({ onClose }) {
                         <br />
                         <br />
                         <p style={{ textAlign: "right" }}>
-                            <a id="l1" href="">
+                            <a id="l1" href="/forgot-password">
                                 Forgot Password?
                             </a>
                         </p>

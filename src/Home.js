@@ -104,7 +104,7 @@ function Home() {
                             X
                         </button>
                         <div className="PopUp-frame">
-                            {/* Login component will be embedded here */}
+                            <iframe src="/login" title="Login Frame" width="100%" height="100%"></iframe>
                         </div>
                     </div>
                 </div>
