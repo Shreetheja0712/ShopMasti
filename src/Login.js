@@ -1,62 +1,45 @@
 import React from "react";
 import "./loginStyle.css";
 
-function Login({ onClose }) {
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Logic here
-    };
+function Login() {
+  return (
+    <div className="login-container">
+      
+      <div className="login-left">
+        <h2>
+          Welcome to <span>Mega Dhaka</span>
+        </h2>
+        <p>The Largest Wholesale Marketplace.</p>
+        <p className="small-text">
+          One-stop wholesale business solution of imported products.
+        </p>
+      </div>
 
-    return (
-        <div className="container">
-            <div id="welcome">
-                <p>
-                    WELCOME to Shop Masti.
-                    <br />
-                    The Largest Wholesale
-                    <br />
-                    Marketplace.
-                    <br />
-                </p>
-            </div>
-            <div id="block">
-                <h1 id="t1">Log in</h1>
-                <hr id="line1" />
-                <div id="form1">
-                    <form onSubmit={handleSubmit}>
-                        <input
-                            type="text"
-                            id="username"
-                            placeholder="Username"
-                            required
-                        />
-                        <br />
-                        <br />
-                        <input
-                            type="password"
-                            id="password"
-                            placeholder="Password"
-                            required
-                        />
-                        <br />
-                        <br />
-                        <p style={{ textAlign: "right" }}>
-                            <a id="l1" href="/forgot-password">
-                                Forgot Password?
-                            </a>
-                        </p>
-                        <input type="submit" id="subButton" value="Log In" />
-                    </form>
-                    <p id="t2">
-                        New User ?{" "}
-                        <a id="l2" href="/register">
-                            Register here
-                        </a>
-                    </p>
-                </div>
-            </div>
-        </div>
-    );
+      <div className="login-right">
+        <h3>Log In</h3>
+
+        <form>
+          <label>Email</label>
+          <input type="email" placeholder="Enter your email" required />
+
+          <label>Password</label>
+          <input type="password" placeholder="Enter password" required />
+
+          <div className="options">
+            <label>
+              <input type="checkbox" /> Remember me
+            </label>
+            <span className="forgot">Forgot Password?</span>
+          </div>
+
+          <button type="submit" className="login-btn">
+            Log In
+          </button>
+        </form>
+      </div>
+
+    </div>
+  );
 }
 
 export default Login;
