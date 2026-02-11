@@ -1,5 +1,5 @@
 import React from "react";
-import "./registerStyle.css";
+/// import "./registerStyle.css";
 
 function Register() {
     const handleSubmit = (e) => {
