@@ -1,7 +1,7 @@
 import React from "react";
 import "./loginStyle.css";
 
-function Login() {
+function Login({ switchToRegister }) {
   return (
     <div className="login-container">
       
@@ -36,6 +36,15 @@ function Login() {
             Log In
           </button>
         </form>
+        <p className="signup-text">
+          Don't have an account? 
+          <span 
+            id="signup-link"
+            onClick={switchToRegister}
+          >
+            Sign Up
+          </span>
+        </p>
       </div>
 
     </div>

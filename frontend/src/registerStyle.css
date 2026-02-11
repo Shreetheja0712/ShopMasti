@@ -1,120 +1,68 @@
-#block {
-    margin-left: 60px;
-    height: 100%;
-    border-radius: 5px;
-    background-color: white;
-    box-shadow: 15px 15px 10px #e7cfcf;
-    width: 60%;
-    padding-top: 100px;
-    padding-bottom: 0px;
-    margin-right: 0px;
-    /* padding-left:30px ;
-    padding-right:30px ;
-    padding-top: 0px ; */
+.register-container {
+  display: flex;
+  width: 800px;
+  height: 450px;
 }
 
-#welcome {
-    background-size: contain;
-    width: 40%;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    color: rgb(99, 13, 13);
+/* LEFT SIDE */
+.register-left {
+  width: 50%;
+  padding: 40px;
+  background:#131921;
 }
 
-#subButton {
-    margin-top: 05px;
-    width: 100%;
-    height: 30px;
-    color: white;
-    border-radius: 8px;
-    background-color: #da4754;
-    border: none;
+.register-left span {
+  color: #d1005d;
 }
 
-#shopImg {
-    padding-right: 10px;
-    border-radius: 30px;
-    margin-left: 20px;
-    height: 550px;
-    width: 300px;
+.small-text {
+  font-size: 14px;
+  margin-top: 10px;
+  color: gray;
 }
 
-.container {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    text-align: center;
-    display: flex;
-    background-color: #fef7f7;
-    border-radius: 10px;
-    align-items: center;
-    justify-content: space-evenly;
+/* RIGHT SIDE */
+.register-right {
+  width: 50%;
+  padding: 40px;
+  background: #c1cbd0;
 }
 
-body {
-    height: 100%;
-    margin: 0;
-    width: 100%;
-    padding: 0px;
-    align-items: center;
+.register-right h3 {
+  margin-bottom: 20px;
+  display: flex;
+  font-size: 24px;
+  justify-content: center;
+  color: #131921;
 }
 
-html {
-    height: 100%;
-    margin: 0;
-    width: 100%;
-    padding: 0px;
+.register-right form {
+  display: flex;
+  flex-direction: column;
 }
 
-#t2 {
-    text-align: end;
+.register-right input {
+  margin-top: 5px;
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #171616;
+  color: #171616;
 }
 
-#t1 {
-    text-align: center;
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-#name {
-    margin-top: 10px;
-}
-#email,
-#name,
-#password {
-    width: 100%;
-    height: 30px;
-    border-radius: 5px;
-    border: 1.5px solid #f8e1e1;
+
+
+.register-btn {
+  background: #d1005d;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  margin-top: 15px;
+  cursor: pointer;
 }
 
-#l1 {
-    text-decoration: none;
-    color: rgb(99, 13, 13);
+.register-btn:hover {
+  background: #b0004d;
 }
 
-#line1 {
-    margin-bottom: 20px;
-    border: 3px solid #fef7f7;
-}
-
-#form1 {
-    margin-left: 40px;
-    margin-right: 40px;
-}
-#googleBtn {
-    border-radius: 50%;
-    padding: 10px;
-    border: 1px solid #0a0a0a;
-    background-color: white;
-    height: 40px;
-    width: 40px;
-    display: flex;
-    cursor: grab;
-    overflow: hidden;
-}
-#otherPlatforms {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-bottom: 20px;
-}

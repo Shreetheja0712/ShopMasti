@@ -30,6 +30,10 @@
 
 .login-right h3 {
   margin-bottom: 20px;
+  display: flex;
+  font-size: 24px;
+  justify-content: center;
+  color: #131921;
 }
 
 .login-right form {
@@ -42,7 +46,8 @@
   margin-bottom: 15px;
   padding: 10px;
   border-radius: 4px;
-  border: 1px solid #ccc;
+  border: 1px solid #171616;
+  color: #171616;
 }
 
 .options {
@@ -68,4 +73,13 @@
 
 .login-btn:hover {
   background: #b0004d;
+}
+
+.signup-text {
+  margin-top: 20px;
+  font-size: 14px;
+}
+.signup-text span {
+  color: #d1005d;
+  cursor: pointer;
 }

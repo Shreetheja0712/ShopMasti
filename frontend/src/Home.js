@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import "./home.css";
 import Login from "./Login";
+import Register from "./Register";
 function Home() {
   const [loginPopupOpen, setLoginPopupOpen] = useState(false);
+  const [registerPopupOpen, setRegisterPopupOpen] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
 
-  const openLogin = () => {
-    setLoginPopupOpen(true);
-  };
-
-  const closeLogin = () => {
-    setLoginPopupOpen(false);
-  };
+  const openLogin = () => setLoginPopupOpen(true);
+  const closeLogin = () => setLoginPopupOpen(false);
+  
+  const openRegister = () => setRegisterPopupOpen(true);
+  const closeRegister = () => setRegisterPopupOpen(false);
 
   const display = () => {
     setDetailsOpen(true);
@@ -104,7 +104,26 @@ function Home() {
               ×
             </button>
 
-            <Login />
+             <Login
+              switchToRegister={() => {
+                setLoginPopupOpen(false);
+                setRegisterPopupOpen(true);
+              }}
+            />
+          </div>
+        </div>
+      )}
+       {registerPopupOpen && (
+        <div className="popup-overlay" onClick={closeRegister}>
+          <div
+            className="popup-box"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className="popup-close" onClick={closeRegister}>
+              ×
+            </button>
+
+            <Register />
           </div>
         </div>
       )}
