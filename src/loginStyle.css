@@ -8,7 +8,7 @@
 .login-left {
   width: 50%;
   padding: 40px;
-  background: #fdf0f5;
+  background:#131921;
 }
 
 .login-left span {
@@ -25,7 +25,7 @@
 .login-right {
   width: 50%;
   padding: 40px;
-  background: white;
+  background: #c1cbd0;
 }
 
 .login-right h3 {

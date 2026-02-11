@@ -7,7 +7,7 @@ function Login() {
       
       <div className="login-left">
         <h2>
-          Welcome to <span>Mega Dhaka</span>
+          Welcome to <span>ShopMasti</span>
         </h2>
         <p>The Largest Wholesale Marketplace.</p>
         <p className="small-text">
