@@ -8,7 +8,7 @@ function Login({ switchToRegister }) {
   const handlesubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:3000/", {
+      const res = await fetch("http://localhost:5000/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -21,18 +21,20 @@ function Login({ switchToRegister }) {
       const data = await res.json();
       if (res.ok) {
         console.log("Login successful:", data);
-        alert("login succesful");
+        alert('login succesful');
         localStorage.setItem("token", data.token);
       } else {
         console.error("Login failed:", data);
-        alert("login failed");
+        alert('login failed');
       }
-    } catch (err) {
+    }
+    catch (err) {
       console.error("Login failed:", err);
     }
-  };
+  }
   return (
     <div className="login-container">
+
       <div className="login-left">
         <h2>
           Welcome to <span>ShopMasti</span>
@@ -46,24 +48,12 @@ function Login({ switchToRegister }) {
       <div className="login-right">
         <h3>Log In</h3>
 
-        <form>
+        <form onSubmit={handlesubmit}>
           <label>Email</label>
-          <input
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <input type="email" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} required />
 
           <label>Password</label>
-          <input
-            type="password"
-            placeholder="Enter password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <input type="password" placeholder="Enter password" value={password} onChange={(e) => setPassword(e.target.value)} required />
 
           <div className="options">
             <label>
