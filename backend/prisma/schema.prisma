@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model users {
+  id            Int       @id @default(autoincrement())
+  username      String    @unique @db.VarChar(50)
+  name          String    @db.VarChar(100)
+  email         String    @unique @db.VarChar(100)
+  mobile_number String?   @db.VarChar(10)
+  password      String    @db.VarChar(255)
+  country       String?   @db.VarChar(100)
+  created_at    DateTime? @default(now()) @db.Timestamp(6)
+}
+model products{
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(100)
+  description String?   @db.Text
+  price       Float
+  discount    Float?   @default(0)
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+}
+model category{
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(100)
+  description String?   @db.Text
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+  subcategories subcategory[]
+}
+model subcategory{
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(100)
+  description String?   @db.Text
+  category_id Int
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+  parent_category category @relation(fields: [category_id], references: [id])
+}
