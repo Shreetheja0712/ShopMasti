@@ -2,39 +2,37 @@ import React from "react";
 import { useState } from "react";
 import "./loginStyle.css";
 
-function Login() {
+function Login({ switchToRegister }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const handlesubmit=async (e)=>{
+  const handlesubmit = async (e) => {
     e.preventDefault();
-    try{
- const res= await fetch("http://localhost:3000/",{
-      method:"POST",
-      headers: {
+    try {
+      const res = await fetch("http://localhost:3000/", {
+        method: "POST",
+        headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           email: email,
           password: password,
         }),
- })
- const data=await res.json();
- if(res.ok){
- console.log("Login successful:", data);
- alert('login succesful');
- localStorage.setItem("token", data.token);
- } else{
- console.error("Login failed:", data);
-  alert('login failed');
- }
-    }
-    catch(err){
+      });
+      const data = await res.json();
+      if (res.ok) {
+        console.log("Login successful:", data);
+        alert("login succesful");
+        localStorage.setItem("token", data.token);
+      } else {
+        console.error("Login failed:", data);
+        alert("login failed");
+      }
+    } catch (err) {
       console.error("Login failed:", err);
     }
-  }
+  };
   return (
     <div className="login-container">
-      
       <div className="login-left">
         <h2>
           Welcome to <span>ShopMasti</span>
@@ -50,10 +48,22 @@ function Login() {
 
         <form>
           <label>Email</label>
-          <input type="email" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
 
           <label>Password</label>
-          <input type="password" placeholder="Enter password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <input
+            type="password"
+            placeholder="Enter password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
 
           <div className="options">
             <label>
@@ -67,16 +77,12 @@ function Login() {
           </button>
         </form>
         <p className="signup-text">
-          Don't have an account? 
-          <span 
-            id="signup-link"
-            onClick={switchToRegister}
-          >
+          Don't have an account?
+          <span id="signup-link" onClick={switchToRegister}>
             Sign Up
           </span>
         </p>
       </div>
-
     </div>
   );
 }
