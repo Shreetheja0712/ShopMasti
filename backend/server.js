@@ -32,7 +32,7 @@ app.post("/", async (req, res) => {
       console.error("Login failed: Invalid password");
       return res.status(401).json({ error: "Invalid email or password" });
     }
-res.json({ message: "Login successful", userId: user.id });
+res.json({ message: "Login successful", userId: r.id });
   }
   catch (err) {
     console.error("Error during login:", err);
@@ -45,6 +45,6 @@ res.json({ message: "Login successful", userId: user.id });
 
 // const PORT = process.env.PORT || 5000;
 
-app.listen(3000, () => {
-  console.log(`Server running on port 3000`);
+app.listen(5000, () => {
+  console.log(`Server running on port 5000`);
 });
