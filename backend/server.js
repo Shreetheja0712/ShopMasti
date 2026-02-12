@@ -13,26 +13,34 @@ app.use(cors({
 app.use(express.json());
 const pool = new Pool({
   connectionString: process.env.DB_URL,
-  ssl: { rejectUnauthorized: false },
+  database: "neondb",
 });
+
+
+pool.query('SET search_path TO shopmasti_app;').then(() => {
+  console.log('Search path set to shopmasti_app');
+}).catch(err => {
+  console.error('Error setting search path:', err);
+});
+
 app.post("/", async (req, res) => {
-  const { email, password } = req.body; 
+  const { email, password } = req.body;
   try {
     const result = await pool.query(
       "SELECT * FROM users WHERE email = $1",
       [email]
     );
-    if(result.rows.length===0){
+    if (result.rows.length === 0) {
       console.error("Login failed: User not found");
       return res.status(401).json({ error: "Invalid email or password" });
     }
-    const r=result.rows[0];
+    const r = result.rows[0];
     const isPasswordValid = await bcrypt.compare(password, r.password);
     if (!isPasswordValid) {
       console.error("Login failed: Invalid password");
       return res.status(401).json({ error: "Invalid email or password" });
     }
-res.json({ message: "Login successful", userId: r.id });
+    res.json({ message: "Login successful", userId: r.id });
   }
   catch (err) {
     console.error("Error during login:", err);
