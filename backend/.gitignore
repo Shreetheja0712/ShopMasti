@@ -18,3 +18,5 @@ Thumbs.db
 # Optional: build files (if you add later)
 dist/
 build/
+
+.agent/
