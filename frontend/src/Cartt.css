@@ -1,3 +1,44 @@
 body{
     background-color: aliceblue;
 }
+h1{
+    padding-top: 20px;
+    text-align: center;
+    font-size: 50px;
+    color:black;
+}
+h3{
+    text-align: left;
+    font-size: 25px;
+    padding:10px;
+    color:black;
+}
+.cart-items{
+   padding-top: 20px;
+   margin-top: 40px;
+   border:2px solid purple;
+   display: flex;
+   flex-direction: column;
+   justify-content: left;
+}
+.cart-item{
+    display:flex;
+    flex-direction: row;
+    color:black;
+     z-index: 999;
+}
+h4{
+    color:black;
+}
+p{
+    color:black;
+}
+#delete{
+    color:black;
+}
+#dec{
+    color:black;
+}
+#asc{
+    color: black;
+}
