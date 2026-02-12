@@ -19,4 +19,4 @@ Thumbs.db
 dist/
 build/
 
-.agent/
+.agents/
