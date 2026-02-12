@@ -2,6 +2,7 @@ import React from "react";
 import "./registerStyle.css";
 
 function Register() {
+  
   return (
     <div className="register-container">
       
