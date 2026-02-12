@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from 'react-router-dom';
 import "./home.css";
 import Login from "./Login";
 import Register from "./Register";
@@ -51,7 +52,7 @@ function Home() {
           </button>
         </div>
         <div id="cart">
-          <a href="#">Cart</a>
+          <Link to="/cart">Cart</Link>
         </div>
       </div>
       <div id="bar2">
