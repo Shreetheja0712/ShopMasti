@@ -127,6 +127,7 @@ model EventSubCategory {
   @@id([event_id, subcategory_id])
 }
 model Cart {
+  id        Int      @id @default(autoincrement())
   user_id    Int
   variant_id Int
   event_id   Int?
@@ -138,7 +139,7 @@ model Cart {
   variant    ItemVariant @relation(fields: [variant_id], references: [id])
   event      EventType?  @relation(fields: [event_id], references: [id])
 
-  @@id([user_id, variant_id, event_id])
+  @@unique([user_id, variant_id, event_id])
 }
 model Orders {
   id              Int       @id @default(autoincrement())
