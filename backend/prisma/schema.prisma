@@ -89,6 +89,7 @@ model ItemVariant {
   images         VariantImage[]
   cart           Cart[]
   orderItems     OrderItem[]
+  reviews        Review[]
 
   @@unique([item_id, color, size])
 }
