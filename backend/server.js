@@ -13,7 +13,7 @@ app.use(cors({
 app.use(express.json());
 const pool = new Pool({
   connectionString: process.env.DB_URL,
-  database: "neondb",
+  database: "shopmasti",
 });
 
 
