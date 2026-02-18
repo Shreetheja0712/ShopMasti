@@ -17,11 +17,7 @@ const pool = new Pool({
 });
 
 
-pool.query('SET search_path TO shopmasti_app;').then(() => {
-  console.log('Search path set to shopmasti_app');
-}).catch(err => {
-  console.error('Error setting search path:', err);
-});
+
 
 app.post("/", async (req, res) => {
   const { email, password } = req.body;
