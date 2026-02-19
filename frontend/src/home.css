@@ -60,11 +60,22 @@ body {
 #searchdiv {
     margin-top: 20px;
 }
-#event {
-    font-size: 25px;
+#even {
+    background: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  outline: none;
+    font-size: 20px;
     text-align: center;
     margin-right: 20px;
     margin-top: 15px;
+    background-color: #131921 ;
+    z-index: -999;
 }
 #login {
     font-size: 25px;
@@ -79,9 +90,9 @@ body {
     margin-right: 40px;
     margin-top: 15px;
 }
-#event:hover {
+#even:hover {
     height: 33px;
-    width: 58px;
+    width: 85px;
     border: 2px solid white;
 }
 #login:hover {

@@ -7,16 +7,21 @@ function Home() {
   const [loginPopupOpen, setLoginPopupOpen] = useState(false);
   const [registerPopupOpen, setRegisterPopupOpen] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
-
   const openLogin = () => setLoginPopupOpen(true);
   const closeLogin = () => setLoginPopupOpen(false);
-  
+  const [show,showstate]=useState(false);
+  const eve=()=>{showstate(true);
+    console.log("Mouse overd on events");
+  }
+  const ever=()=>{
+          showstate(false);
+        };
   const openRegister = () => setRegisterPopupOpen(true);
   const closeRegister = () => setRegisterPopupOpen(false);
-
   const display = () => {
     setDetailsOpen(true);
   };
+  
 
   return (
     <>
@@ -42,9 +47,8 @@ function Home() {
             Search
           </button>
         </div>
-        <div id="event">
-          {" "}
-          <a href="#">Events</a>
+        <div id="event" >
+         <button id="even" onMouseOver={eve} onMouseLeave={ever} >EVENTS</button>
         </div>
         <div id="login">
           <button id="log" onClick={openLogin}>
@@ -134,6 +138,17 @@ function Home() {
           {/* Details component will be embedded here */}
         </div>
       )}
+      {show && (
+        <div className="eventlist" onMouseLeave={ever}>
+            <ul id="listitems">
+              <li>Lovers</li>
+              <li>Marriage</li>
+              <li>Breakup</li>
+              <li>Birthdays</li>
+            </ul>
+        </div>
+      )
+      }
       <footer id="foot">
         <p>
           ShopMasti is an academic lab project developed to demonstrate the
