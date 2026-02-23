@@ -1,16 +1,23 @@
-const express = require("express");
-const cors = require("cors");
-const { Pool } = require("pg");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
-require("dotenv").config();
+import express, { Request, Response } from "express";
+import cors from "cors";
+import { Pool } from "pg";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+import * as dotenv from "dotenv";
+import db from "./db";
+
+dotenv.config();
+
 const app = express();
-app.use(cors({
-  origin: "http://localhost:3000",
-  credentials: true,
-}
-));
+
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  }),
+);
 app.use(express.json());
+
 const pool = new Pool({
   connectionString: process.env.DB_URL,
   database: "shopmasti",
@@ -18,27 +25,40 @@ const pool = new Pool({
 
 
 
+interface LoginRequest {
+  email: string;
+  password: string;
+}
 
-app.post("/", async (req, res) => {
+interface UserRow {
+  id: string;
+  password: string;
+  [key: string]: any;
+}
+
+app.post("/", async (req: Request<{}, {}, LoginRequest>, res: Response) => {
   const { email, password } = req.body;
   try {
-    const result = await pool.query(
-      "SELECT * FROM users WHERE email = $1",
-      [email]
-    );
+    console.log(await db.user.findFirst({
+        where: {
+            email: email
+        }
+    }));
+    const result = await pool.query(`SELECT * FROM "User" WHERE email = $1`, [
+      email,
+    ]);
     if (result.rows.length === 0) {
       console.error("Login failed: User not found");
       return res.status(401).json({ error: "Invalid email or password" });
     }
-    const r = result.rows[0];
+    const r: UserRow = result.rows[0];
     const isPasswordValid = await bcrypt.compare(password, r.password);
     if (!isPasswordValid) {
       console.error("Login failed: Invalid password");
       return res.status(401).json({ error: "Invalid email or password" });
     }
     res.json({ message: "Login successful", userId: r.id });
-  }
-  catch (err) {
+  } catch (err) {
     console.error("Error during login:", err);
     res.status(500).json({ error: "Internal server error" });
   }
