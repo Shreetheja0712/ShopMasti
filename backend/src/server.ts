@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import * as dotenv from "dotenv";
 import db from "./config/db";
+import authRoutes from "./routes/authRoutes";
 
 dotenv.config();
 
@@ -17,6 +18,8 @@ app.use(
   }),
 );
 app.use(express.json());
+
+app.use("/api/auth", authRoutes);
 
 const pool = new Pool({
   connectionString: process.env.DB_URL,
