@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from 'react-router-dom';
 import "./home.css";
 import Login from "./Login";
+import Details from "./Details";
 import Register from "./Register";
 function Home() {
   const [loginPopupOpen, setLoginPopupOpen] = useState(false);
@@ -21,14 +22,37 @@ function Home() {
   const display = () => {
     setDetailsOpen(true);
   };
-  
+  const [details, setDetails] = useState(false);
+  const toggleDetails = () => {
+    setDetails(true);
+  };
+  const oggleDetails = () => {
+    setDetails(false);
+  };
 
   return (
     <>
       <div id="bar1">
-        <div id="name">
-          <a href="#home">SHOPMASTI.in</a>
-        </div>
+
+<div
+  id="ca" onMouseOver={toggleDetails} onMouseLeave={oggleDetails}
+  style={{
+    width: "50px",
+    height: "50px",
+    borderRadius: "50%",
+    marginLeft: "20px",
+    marginTop: "10px",
+    overflow: "hidden",
+     flex: "0 0 auto",
+  }}
+>
+  <img
+    src="https://images.playground.com/62baa7f4ad824de3998899e7bd3ad7f7.jpeg"
+    alt="User profile"
+    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+  />
+</div>
+{details && <Details />}
         <div id="offer">
           <a href="#">Offers</a>
         </div>
@@ -60,13 +84,9 @@ function Home() {
         </div>
       </div>
       <div id="bar2">
-        <div className="menu-btn">
-          <button onClick={display}>
-            <i className="fa fa-bars"></i>
-          </button>
-        </div>
-        <div id="all">
-          <a href="#">All</a>
+           
+        <div id="all" style={{ paddingLeft: "30px" }}>
+          <a href="#"> All</a>
         </div>
         <div id="mt">
           <a href="#">Mobiles & Tablets</a>

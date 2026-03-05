@@ -1,14 +1,16 @@
 import React from "react";
-import "./home.css";
+import "./Details.css";
 
 function Details() {
     return (
         <div className="list">
             <ul>
-                <li>BestSellers</li>
-                <li>New Arrivals</li>
-                <li>Customer Favorites</li>
-                <li>Top Rated Products</li>
+               <li>Your Account</li>
+               <li>Order History</li>
+               <li>Ticket Raise</li>
+               <li>Contact Us</li>
+               <li>Settings</li>
+               <li>Sign Out</li>
             </ul>
         </div>
     );

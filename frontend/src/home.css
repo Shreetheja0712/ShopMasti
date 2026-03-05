@@ -115,7 +115,7 @@ body {
     height: 25px;
     background-color: #37474f;
     flex-direction: row;
-    /* justify-content: space-between; */
+    justify-content: space-evenly;
 }
 #all {
     font-size: medium;
@@ -340,4 +340,9 @@ body {
 }
 #detailb {
     background-color: #e8f5e9;
+}
+
+#ca:hover .detail {
+     cursor: pointer;
+    display: block;
 }
