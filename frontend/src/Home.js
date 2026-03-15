@@ -45,7 +45,7 @@ function Home() {
     overflow: "hidden",
      flex: "0 0 auto",
   }}
->
+ >
   <img
     src="https://images.playground.com/62baa7f4ad824de3998899e7bd3ad7f7.jpeg"
     alt="User profile"
