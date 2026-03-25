@@ -8,7 +8,7 @@ function Login({ switchToRegister }) {
   const handlesubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:5000/", {
+      const res = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -49,14 +49,14 @@ function Login({ switchToRegister }) {
         <h3>Log In</h3>
 
         <form onSubmit={handlesubmit}>
-          <label>Email</label>
+          <label className="label">Email</label>
           <input type="email" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} required />
 
-          <label>Password</label>
+          <label className="label">Password</label>
           <input type="password" placeholder="Enter password" value={password} onChange={(e) => setPassword(e.target.value)} required />
 
           <div className="options">
-            <label>
+            <label className="label">
               <input type="checkbox" /> Remember me
             </label>
             <span className="forgot">Forgot Password?</span>
@@ -66,7 +66,7 @@ function Login({ switchToRegister }) {
             Log In
           </button>
         </form>
-        <p className="signup-text">
+        <p className="signup-text" style={{ color: "#131921" }}>
           Don't have an account?
           <span id="signup-link" onClick={switchToRegister}>
             Sign Up

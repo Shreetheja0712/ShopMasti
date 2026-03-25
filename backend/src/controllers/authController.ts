@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import db from "../config/db";
-import { Request, Response } from "express";
+import e, { Request, Response } from "express";
 
 
 interface RegisterRequest {
@@ -47,3 +47,35 @@ export const registerUser = async (req: Request<{}, {}, RegisterRequest>, res: R
 }
 
 }
+
+interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export const loginUser = async (req :Request<{},{},LoginRequest>, res: Response) => {
+    try {
+        const { email, password } = req.body;
+        if (!email || !password) {
+            return res.status(400).json({ error: "Email and password are required" });
+        }   
+        const user = await db.user.findFirst({
+            where: {
+                email: email
+            }
+        });
+        if (!user) {
+            return res.status(400).json({ error: "Invalid email or password" });
+        }
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            return res.status(400).json({ error: "Invalid email or password" });
+        }
+        res.status(200).json({ message: "Login successful", userId: user.id });
+    } catch (error) {
+        console.error("Error logging in user:", error);
+        res.status(500).json({ error: "Internal server error" });
+    } 
+}
+        
+
