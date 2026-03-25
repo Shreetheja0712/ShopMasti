@@ -65,4 +65,11 @@
 .register-btn:hover {
   background: #b0004d;
 }
-
+.error {
+  color: red;
+  margin-bottom: 10px;
+}
+.message {
+  color: green;
+  margin-bottom: 10px;
+}

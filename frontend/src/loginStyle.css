@@ -35,6 +35,9 @@
   justify-content: center;
   color: #131921;
 }
+.label{
+  color:#131921;
+}
 
 .login-right form {
   display: flex;
