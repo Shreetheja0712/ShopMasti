@@ -1,7 +1,8 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import db from "../config/db";
-import e, { Request, Response } from "express";
+import  { Request, Response } from "express";
+import { AuthRequest } from "../middleware/authMiddleware";
 
 
 interface RegisterRequest {
@@ -63,7 +64,8 @@ export const loginUser = async (req :Request<{},{},LoginRequest>, res: Response)
         const user = await db.user.findFirst({
             where: {
                 email: email
-            }
+            },
+            include: { role: true }
         });
         if (!user) {
             return res.status(400).json({ error: "Invalid email or password" });
@@ -72,12 +74,41 @@ export const loginUser = async (req :Request<{},{},LoginRequest>, res: Response)
         if (!isPasswordValid) {
             return res.status(400).json({ error: "Invalid email or password" });
         }
-        const token = jwt.sign({ userId: user.id, email: user.email, role: user.role_id }, process.env.JWT_SECRET!, { expiresIn: "7d" });
-        res.status(200).json({ message: "Login successful", userId: user.id, token });
+        const token = jwt.sign({ userId: user.id, email: user.email, role: user.role_id, roleName: user.role.name }, process.env.JWT_SECRET!, { expiresIn: "7d" });
+        res.status(200).json({ 
+            message: "Login successful", 
+            userId: user.id, 
+            username: user.username,
+            role: user.role.name,
+            token });
     } catch (error) {
         console.error("Error logging in user:", error);
         res.status(500).json({ error: "Internal server error" });
     } 
 }
-        
+export const getMe = async (req: AuthRequest, res: Response) => {
+    try {
+        const user = await db.user.findUnique({
+            where: { id: Number(req.user!.userId) },
+            select: {
+                id: true,
+                username: true,
+                email: true,
+                mobile_number: true,
+                country: true,
+                created_at: true,
+                role: { select: { name: true } }
+            }
+        });
+ 
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+ 
+        res.status(200).json(user);
+    } catch (error) {
+        console.error("Error fetching user:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
     
