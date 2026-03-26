@@ -1,10 +1,13 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import "./home.css";
 import Login from "./Login";
 import Details from "./Details";
 import Register from "./Register";
+import Ap from "./mobile_tablets";
 function Home() {
+  const navigate = useNavigate();
   const [loginPopupOpen, setLoginPopupOpen] = useState(false);
   const [registerPopupOpen, setRegisterPopupOpen] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -29,7 +32,7 @@ function Home() {
   const oggleDetails = () => {
     setDetails(false);
   };
-
+  const [showAp, setShowAp] = useState(false);
   return (
     <>
       <div id="bar1">
@@ -88,9 +91,14 @@ function Home() {
         <div id="all" style={{ paddingLeft: "30px" }}>
           <a href="#"> All</a>
         </div>
-        <div id="mt">
-          <a href="#">Mobiles & Tablets</a>
-        </div>
+      <div id="mt">
+        {/* <button id="mtt" onClick={() => navigate("/mobile-tablets")}>
+          Mobile & Tablets
+        </button> */}
+        <Link to="/mobile-tablets" id="mtt">Mobile & Tablets</Link>
+      </div>
+
+    
         <div id="fashion">
           <a href="#">Fashion</a>
         </div>

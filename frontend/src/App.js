@@ -4,6 +4,7 @@ import Home from "./Home";
 import Login from "./Login";
 import Register from "./Register";
 import Cart from "./Cartt";
+import MobileTablets from "./mobile_tablets";
 function App() {
     return (
             <Routes>
@@ -11,6 +12,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/cart" element={<Cart />} />
+                <Route path="/mobile-tablets" element={<MobileTablets />} />
             </Routes>
     );
 }
