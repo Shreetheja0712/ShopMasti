@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import db from "../config/db";
 import e, { Request, Response } from "express";
 
@@ -71,11 +72,12 @@ export const loginUser = async (req :Request<{},{},LoginRequest>, res: Response)
         if (!isPasswordValid) {
             return res.status(400).json({ error: "Invalid email or password" });
         }
-        res.status(200).json({ message: "Login successful", userId: user.id });
+        const token = jwt.sign({ userId: user.id, email: user.email, role: user.role_id }, process.env.JWT_SECRET!, { expiresIn: "7d" });
+        res.status(200).json({ message: "Login successful", userId: user.id, token });
     } catch (error) {
         console.error("Error logging in user:", error);
         res.status(500).json({ error: "Internal server error" });
     } 
 }
         
-
+    

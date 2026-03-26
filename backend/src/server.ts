@@ -1,8 +1,6 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
-import { Pool } from "pg";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
+
 import * as dotenv from "dotenv";
 import db from "./config/db";
 import authRoutes from "./routes/authRoutes";
