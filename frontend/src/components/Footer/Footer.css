@@ -1,0 +1,21 @@
+#foot {
+  background-color: #131921;
+  color: var(--color-white);
+  text-align: center;
+  padding: 10px;
+  margin-top: 20px;
+}
+
+#last {
+  font-size: 32px;
+}
+
+.logo-text {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--color-white);
+  margin-bottom: 10px;
+}
+.logo-text span {
+  color: var(--color-amber);
+}

@@ -33,13 +33,25 @@ model User {
   addresses     Address[]
   reviews       Review[]
 }
-model Category {
+model UpperCategory {
   id          Int            @id @default(autoincrement())
   name        String         @unique
   description String?
   is_active   Boolean        @default(true)
   created_at  DateTime       @default(now())
   updated_at  DateTime       @updatedAt
+
+  categories   Category[]
+}
+model Category {
+  id          Int            @id @default(autoincrement())
+  name        String         @unique
+  upper_category_id Int?
+  description String?
+  is_active   Boolean        @default(true)
+  created_at  DateTime       @default(now())
+  updated_at  DateTime       @updatedAt
+  upper_category UpperCategory? @relation(fields: [upper_category_id], references: [id])
 
   subcategories SubCategory[]
 }
@@ -122,6 +134,7 @@ model EventType {
 model EventSubCategory {
   event_id        Int
   subcategory_id  Int
+  description      String?
   created_at      DateTime @default(now())
 
   event           EventType   @relation(fields: [event_id], references: [id])

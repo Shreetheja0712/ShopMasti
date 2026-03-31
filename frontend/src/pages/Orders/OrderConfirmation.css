@@ -1,0 +1,244 @@
+.oc-root {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 24px 20px 40px;
+}
+
+/* Steps */
+.oc-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 36px;
+  flex-wrap: wrap;
+  gap: 0;
+}
+.oc-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.oc-step-dot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-gray-200);
+  color: var(--color-gray-500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+.oc-step.active .oc-step-dot { background: var(--color-dark); color: white; }
+.oc-step.done .oc-step-dot { background: var(--color-success); color: white; }
+.oc-step span { font-size: 12px; color: var(--color-gray-500); font-weight: 500; }
+.oc-step.active span { color: var(--color-dark); font-weight: 700; }
+.oc-step.done span { color: var(--color-success); }
+.oc-step-line {
+  width: 60px;
+  height: 2px;
+  background: var(--color-gray-200);
+  margin-bottom: 22px;
+  transition: background 0.2s;
+}
+.oc-step-line.done { background: var(--color-success); }
+
+/* Section */
+.oc-section { }
+.oc-section h2 { font-size: 20px; font-weight: 700; color: var(--color-dark); margin-bottom: 20px; }
+
+/* Address */
+.oc-no-address { text-align: center; padding: 30px; color: var(--color-gray-500); }
+.oc-no-address button {
+  margin-top: 12px;
+  padding: 10px 24px;
+  background: var(--color-dark);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-family: var(--font-main);
+  font-size: 13px;
+}
+.oc-address-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.oc-address-card {
+  background: var(--color-white);
+  border: 2px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.2s;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-gray-700);
+}
+.oc-address-card strong { display: block; font-size: 14px; color: var(--color-dark); margin-bottom: 4px; }
+.oc-address-card.selected { border-color: var(--color-dark); }
+.oca-check {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-dark);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.oca-default {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-info);
+  background: var(--color-info-bg);
+  padding: 2px 8px;
+  border-radius: 20px;
+  margin-top: 4px;
+}
+
+/* Payment */
+.oc-payment-options { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+.oc-payment-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  border: 2px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: border-color 0.2s;
+  background: var(--color-white);
+}
+.oc-payment-card.selected { border-color: var(--color-dark); }
+.oc-payment-card strong { display: block; font-size: 15px; color: var(--color-dark); }
+.oc-payment-card p { font-size: 12px; color: var(--color-gray-500); margin-top: 3px; }
+
+/* Review */
+.oc-review-grid { display: grid; grid-template-columns: 1fr 280px; gap: 20px; margin-bottom: 20px; }
+.oc-review-items {
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+}
+.oc-review-items h4 { font-size: 14px; font-weight: 700; color: var(--color-dark); margin-bottom: 14px; }
+.oc-review-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--color-gray-700);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-gray-100);
+}
+.oc-review-item:last-child { border-bottom: none; }
+
+.oc-review-summary {
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.oc-review-summary h4 { font-size: 14px; font-weight: 700; color: var(--color-dark); }
+.oc-rs-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--color-gray-700); }
+.oc-error {
+  background: var(--color-error-bg);
+  color: var(--color-error);
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+}
+.oc-place-btn {
+  width: 100%;
+  padding: 13px;
+  background: var(--color-success);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-main);
+  transition: background 0.2s;
+}
+.oc-place-btn:hover:not(:disabled) { background: #15803d; }
+.oc-place-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* Buttons */
+.oc-btn-row { display: flex; gap: 14px; margin-top: 8px; }
+.oc-next-btn {
+  padding: 12px 28px;
+  background: var(--color-dark);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-main);
+  transition: background 0.2s;
+}
+.oc-next-btn:hover:not(:disabled) { background: var(--color-bar2); }
+.oc-next-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.oc-back-btn {
+  padding: 12px 20px;
+  background: none;
+  color: var(--color-gray-700);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  cursor: pointer;
+  font-family: var(--font-main);
+  transition: background 0.2s;
+}
+.oc-back-btn:hover { background: var(--color-gray-100); }
+
+/* Success */
+.oc-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 60px 0;
+  text-align: center;
+}
+.oc-success-icon { font-size: 72px; }
+.oc-success h2 { font-size: 28px; font-weight: 800; color: var(--color-dark); }
+.oc-success p { font-size: 15px; color: var(--color-gray-500); }
+.oc-success-btns { display: flex; gap: 14px; margin-top: 8px; }
+.oc-success-btns button {
+  padding: 12px 28px;
+  background: var(--color-dark);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-main);
+}
+.oc-success-btns button.outlined {
+  background: none;
+  border: 2px solid var(--color-dark);
+  color: var(--color-dark);
+}
+
+@media (max-width: 640px) {
+  .oc-review-grid { grid-template-columns: 1fr; }
+  .oc-step-line { width: 30px; }
+}

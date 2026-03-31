@@ -1,0 +1,128 @@
+/* =========================================================
+   SHOPMASTI – Global Design Tokens
+   Primary palette: #131921 (dark navy), #ff9f00 (amber), #d1005d (pink accent)
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap');
+
+:root {
+
+  --color-dark:       #131921;
+  --color-dark-2:     #1e2a36;
+  --color-bar2:       #37474f;
+  --color-amber:      #ff9f00;
+  --color-amber-dark: #e68f00;
+  --color-pink:       #d1005d;
+  --color-pink-dark:  #b0004d;
+
+  --color-bg:         #f8f9fb;
+  --color-white:      #ffffff;
+  --color-gray-50:    #f9fafb;
+  --color-gray-100:   #f3f4f6;
+  --color-gray-200:   #e5e7eb;
+  --color-gray-400:   #9ca3af;
+  --color-gray-500:   #6b7280;
+  --color-gray-700:   #374151;
+  --color-gray-900:   #111827;
+
+
+  --color-success:    #16a34a;
+  --color-success-bg: #dcfce7;
+  --color-error:      #dc2626;
+  --color-error-bg:   #fee2e2;
+  --color-info:       #2563eb;
+  --color-info-bg:    #eff6ff;
+
+  --font-main:        'DM Sans', sans-serif;
+
+
+  --radius-sm:        6px;
+  --radius-md:        10px;
+  --radius-lg:        14px;
+  --radius-xl:        18px;
+
+
+  --shadow-sm:        0 1px 4px rgba(0,0,0,0.06);
+  --shadow-md:        0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg:        0 10px 32px rgba(0,0,0,0.12);
+
+
+  --navbar-bar1:      70px;
+  --navbar-bar2:      30px;
+  --navbar-total:     100px;
+}
+
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--color-bg);
+  color: var(--color-gray-900);
+  min-height: 100vh;
+}
+
+a { text-decoration: none; color: inherit; }
+
+
+.sm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1200;
+}
+
+.sm-popup-box {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.sm-popup-close {
+  position: absolute;
+  right: 14px;
+  top: 10px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: var(--color-gray-500);
+  z-index: 1;
+  line-height: 1;
+}
+.sm-popup-close:hover { color: var(--color-gray-900); }
+
+.sm-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--color-gray-200);
+  border-top-color: var(--color-info);
+  border-radius: 50%;
+  animation: sm-spin 0.7s linear infinite;
+}
+@keyframes sm-spin { to { transform: rotate(360deg); } }
+
+.sm-state-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 0;
+  gap: 16px;
+  color: var(--color-gray-500);
+  font-size: 14px;
+}
+
+
+.sm-page {
+  padding-top: var(--navbar-total);
+  min-height: 100vh;
+}

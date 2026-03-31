@@ -1,25 +1,34 @@
-import {Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import "./styles/theme.css";
 import "./App.css";
-import Home from "./Home";
-import Login from "./Login";
-import Register from "./Register";
-import Cart from "./Cartt";
-import MobileTablets from "./mobile_tablets";
-import ProductView from "./ProductView";
-import ProductsPage from "./ProductsPage";
+
+import Home from "./pages/Home/Home";
+import ProductsPage from "./pages/Products/ProductsPage";
+import ProductView from "./pages/Products/ProductView";
+import Cart from "./pages/Cart/Cart";
+import EventsPage from "./pages/Events/EventsPage";
+import EventViewer from "./pages/Events/EventViewer";
+import OrdersPage from "./pages/Orders/OrdersPage";
+import OrderConfirmation from "./pages/Orders/OrderConfirmation";
+import ProfilePage from "./pages/Profile/ProfilePage";
 
 function App() {
-    return (
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/mobile-tablets" element={<MobileTablets />} />
-                <Route path="/products" element={<ProductsPage />} />
-                <Route path="/products/:id" element={<ProductView />} />
-            </Routes>
-    );
+  return (
+    <AuthProvider>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/products" element={<ProductsPage />} />
+        <Route path="/products/:id" element={<ProductView />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/events" element={<EventsPage />} />
+        <Route path="/events/:eventId" element={<EventViewer />} />
+        <Route path="/orders" element={<OrdersPage />} />
+        <Route path="/order-confirmation" element={<OrderConfirmation />} />
+        <Route path="/profile" element={<ProfilePage />} />
+      </Routes>
+    </AuthProvider>
+  );
 }
 
 export default App;
