@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
-import { authFetch, isLoggedIn } from "../../utils/api";
+import { authFetch, apiFetch, isLoggedIn } from "../../utils/api";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import Login from "../Auth/Login";
@@ -35,6 +35,7 @@ function ProductView() {
   const [loginOpen, setLoginOpen] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchProduct(); }, [id]);
 
   useEffect(() => {
@@ -57,7 +58,7 @@ function ProductView() {
   const fetchProduct = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/products/${id}`);
+      const res = await apiFetch(`/products/${id}`);
       const data = await res.json();
       if (res.ok) { setProduct(data); setReviews(data.reviews || []); }
       else setError("Product not found.");

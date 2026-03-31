@@ -23,7 +23,7 @@ export default function OrderConfirmation() {
     if (!isLoggedIn()) { setLoginOpen(true); return; }
     if (!items?.length) { navigate("/cart"); return; }
     fetchAddresses();
-  }, []);
+  }, [items?.length, navigate]);
 
   const fetchAddresses = async () => {
     try {

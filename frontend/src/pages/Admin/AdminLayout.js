@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { authFetch } from "../../utils/api";
 import "./Admin.css";
 
 
@@ -21,6 +20,15 @@ const NAV = [
   { key: "users",      label: "Users",      icon: "👥" },
 ];
 
+const SECTIONS = {
+  dashboard:  <AdminDashboard />,
+  events:     <AdminEvents />,
+  products:   <AdminProducts />,
+  categories: <AdminCategories />,
+  orders:     <AdminOrders />,
+  users:      <AdminUsers />,
+};
+
 export default function AdminLayout() {
   const { user, isLoggedIn, isAdmin, logout } = useAuth();
   const navigate = useNavigate();
@@ -30,18 +38,9 @@ export default function AdminLayout() {
   useEffect(() => {
     if (!isLoggedIn()) { navigate("/", { state: { openLogin: true } }); return; }
     if (!isAdmin())    { navigate("/"); }
-  }, [user]);
+  }, [user,isLoggedIn,isAdmin,navigate]);
 
   const handleLogout = () => { logout(); navigate("/"); };
-
-  const SECTIONS = {
-    dashboard:  <AdminDashboard />,
-    events:     <AdminEvents />,
-    products:   <AdminProducts />,
-    categories: <AdminCategories />,
-    orders:     <AdminOrders />,
-    users:      <AdminUsers />,
-  };
 
   const sectionLabel = NAV.find(n => n.key === section)?.label || "";
 

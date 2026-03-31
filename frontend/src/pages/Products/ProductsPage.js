@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import {useSearchParams } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import ProductCard from "../../components/ProductCard/ProductCard";
+import { apiFetch } from "../../utils/api";
 import Login from "../Auth/Login";
 import Register from "../Auth/Register";
 import "./ProductsPage.css";
@@ -20,6 +21,7 @@ function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get("category") || "");
   const [selectedSubCategory, setSelectedSubCategory] = useState(searchParams.get("subcategory") || "");
+  const [upperFilter] = useState(searchParams.get("upper") || "");
   const [sortBy, setSortBy] = useState(searchParams.get("sort") || "newest");
   const [priceMin, setPriceMin] = useState(searchParams.get("minPrice") || "");
   const [priceMax, setPriceMax] = useState(searchParams.get("maxPrice") || "");
@@ -30,12 +32,13 @@ function ProductsPage() {
 
   useEffect(() => { fetchCategories(); }, []);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchProducts(); },
     [selectedCategory, selectedSubCategory, sortBy, priceMin, priceMax, inStockOnly, searchQuery]);
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/products/categories");
+      const res = await apiFetch("/products/categories");
       const data = await res.json();
       if (res.ok) setCategories(data);
     } catch { }
@@ -49,6 +52,7 @@ function ProductsPage() {
       if (searchQuery) params.set("q", searchQuery);
       if (selectedCategory) params.set("category", selectedCategory);
       if (selectedSubCategory) params.set("subcategory", selectedSubCategory);
+      if (upperFilter) params.set("upper", upperFilter);
       if (sortBy) params.set("sort", sortBy);
       if (priceMin) params.set("minPrice", priceMin);
       if (priceMax) params.set("maxPrice", priceMax);
@@ -56,7 +60,7 @@ function ProductsPage() {
       if (eventId) params.set("eventId", eventId);
       setSearchParams(params);
 
-      const res = await fetch(`http://localhost:5000/api/products?${params.toString()}`);
+      const res = await apiFetch(`/products?${params.toString()}`);
       const data = await res.json();
       if (res.ok) setProducts(data);
       else setError("Failed to load products.");

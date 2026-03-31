@@ -160,11 +160,11 @@ function EventGroup({ group, onQtyChange, onRemove, onPlaceOrder }) {
               <span>Total</span>
               <span>₹{final.toFixed(2)}</span>
             </div>
-            {eventDisc === 0 && group.discounts?.length > 0 && (
+            {eventDisc === 0 && group.discounts?.filter(d => d.is_active).length > 0 && (
               <div className="cg-disc-hint">
                 Add ₹
                 {(
-                  parseFloat(group.discounts[0].min_purchase_amount) -
+                  parseFloat(group.discounts.filter(d => d.is_active)[0].min_purchase_amount) -
                   afterProductDisc
                 ).toFixed(2)}{" "}
                 more to unlock event discount!
@@ -197,7 +197,7 @@ export default function Cart() {
       return;
     }
     fetchCart();
-  }, []);
+  }, [navigate]);
 
   const fetchCart = async () => {
     setLoading(true);
@@ -263,7 +263,7 @@ export default function Cart() {
 
   return (
     <>
-      <Navbar/>
+      <Navbar onOpenLogin={() => navigate('/', { state: { openLogin: true } })} />
 
       <div className="sm-page">
         <div className="cart-root">

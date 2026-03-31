@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { apiFetch } from "../../utils/api";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import Login from "../Auth/Login";
@@ -16,7 +17,7 @@ export default function EventViewer() {
   const [registerOpen, setRegisterOpen] = useState(false);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/events/${eventId}`)
+    apiFetch(`/events/${eventId}`)
       .then((r) => r.json())
       .then((d) => { if (d?.id) setEvent(d); else setError("Event not found."); })
       .catch(() => setError("Failed to load event."))

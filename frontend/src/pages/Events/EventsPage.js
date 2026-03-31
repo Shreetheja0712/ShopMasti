@@ -5,6 +5,7 @@ import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import Login from "../Auth/Login";
 import Register from "../Auth/Register";
+import { apiFetch } from "../../utils/api";
 import "./Events.css";
 
 export default function EventsPage() {
@@ -15,7 +16,7 @@ export default function EventsPage() {
   const [registerOpen, setRegisterOpen] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/events")
+    apiFetch("/events")
       .then((r) => r.json())
       .then((d) => { if (Array.isArray(d)) setEvents(d.filter((e) => e.is_active)); })
       .catch(() => {})

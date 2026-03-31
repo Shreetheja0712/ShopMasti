@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { apiFetch } from "../../utils/api";
 import "./Navbar.css";
 
 export default function Navbar({ onOpenLogin, onOpenRegister }) {
@@ -27,15 +28,19 @@ export default function Navbar({ onOpenLogin, onOpenRegister }) {
 
   useEffect(() => {
     // Fetch live events for flyout
-    fetch("http://localhost:5000/api/events")
+    apiFetch("/events")
       .then((r) => r.json())
-      .then((d) => { if (Array.isArray(d)) setEvents(d); })
+      .then((d) => {
+        if (Array.isArray(d)) setEvents(d);
+      })
       .catch(() => {});
 
     // Fetch upper categories → categories → subcategories for mega menu
-    fetch("http://localhost:5000/api/upper-categories")
+    apiFetch("/upper-categories")
       .then((r) => r.json())
-      .then((d) => { if (Array.isArray(d)) setUpperCategories(d); })
+      .then((d) => {
+        if (Array.isArray(d)) setUpperCategories(d);
+      })
       .catch(() => {});
   }, []);
 
@@ -73,19 +78,18 @@ export default function Navbar({ onOpenLogin, onOpenRegister }) {
 
   const getMaxDiscount = (ev) => {
     if (!ev.discounts?.length) return null;
-    const max = Math.max(...ev.discounts.map((d) => parseFloat(d.discount_amount)));
+    const max = Math.max(
+      ...ev.discounts.map((d) => parseFloat(d.discount_amount)),
+    );
     return max > 0 ? `Up to ₹${max} off` : null;
   };
 
-  const getUpperData = (name) =>
-    upperCategories.find((u) => u.name === name);
+  const getUpperData = (name) => upperCategories.find((u) => u.name === name);
 
   return (
     <div className="navbar-wrapper">
-
       {/* BAR 1  */}
       <div id="bar1">
-
         {/* Brand name */}
         <div id="name" onClick={() => navigate("/")}>
           Shop<span>Masti</span>
@@ -93,7 +97,9 @@ export default function Navbar({ onOpenLogin, onOpenRegister }) {
 
         {/* Offers */}
         <div id="offer">
-          <a href="#">Offers</a>
+          <button onClick={() => navigate("/products")} className="offers-link">
+              Offers
+          </button>
         </div>
 
         {/* Search */}
@@ -106,7 +112,11 @@ export default function Navbar({ onOpenLogin, onOpenRegister }) {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <button id="search" type="submit" style={{ backgroundColor: "orange" }}>
+            <button
+              id="search"
+              type="submit"
+              style={{ backgroundColor: "orange" }}
+            >
               Search
             </button>
           </form>
@@ -123,22 +133,36 @@ export default function Navbar({ onOpenLogin, onOpenRegister }) {
           </button>
 
           {showEventFlyout && (
-            <div className="eventlist" onMouseEnter={() => setShowEventFlyout(true)}>
+            <div
+              className="eventlist"
+              onMouseEnter={() => setShowEventFlyout(true)}
+            >
               <ul id="listitems">
-                {events.filter((e) => e.is_active).slice(0, 8).map((ev) => (
-                  <li
-                    key={ev.id}
-                    onClick={() => { setShowEventFlyout(false); navigate(`/events/${ev.id}`); }}
-                  >
-                    <span>{ev.name}</span>
-                    {getMaxDiscount(ev) && (
-                      <span className="ev-disc-tag">{getMaxDiscount(ev)}</span>
-                    )}
-                  </li>
-                ))}
+                {events
+                  .filter((e) => e.is_active)
+                  .slice(0, 8)
+                  .map((ev) => (
+                    <li
+                      key={ev.id}
+                      onClick={() => {
+                        setShowEventFlyout(false);
+                        navigate(`/events/${ev.id}`);
+                      }}
+                    >
+                      <span>{ev.name}</span>
+                      {getMaxDiscount(ev) && (
+                        <span className="ev-disc-tag">
+                          {getMaxDiscount(ev)}
+                        </span>
+                      )}
+                    </li>
+                  ))}
                 <li
                   className="ev-view-all"
-                  onClick={() => { setShowEventFlyout(false); navigate("/events"); }}
+                  onClick={() => {
+                    setShowEventFlyout(false);
+                    navigate("/events");
+                  }}
                 >
                   View All Events →
                 </li>
@@ -149,12 +173,19 @@ export default function Navbar({ onOpenLogin, onOpenRegister }) {
 
         {/* Cart — blocks if not logged in */}
         <div id="cart" ref={cartRef}>
-          <Link to="/cart" onClick={handleCartClick}>Cart</Link>
+          <Link to="/cart" onClick={handleCartClick}>
+            Cart
+          </Link>
 
           {cartMsg && (
             <div className="cart-login-tooltip">
               <p>Login to use cart</p>
-              <button onClick={() => { setCartMsg(false); onOpenLogin(); }}>
+              <button
+                onClick={() => {
+                  setCartMsg(false);
+                  onOpenLogin();
+                }}
+              >
                 Login
               </button>
             </div>
@@ -180,20 +211,45 @@ export default function Navbar({ onOpenLogin, onOpenRegister }) {
                     <span>My Account</span>
                   </div>
                   <ul>
-                    <li onClick={() => { setShowUserMenu(false); navigate("/profile"); }}>
+                    <li
+                      onClick={() => {
+                        setShowUserMenu(false);
+                        navigate("/profile");
+                      }}
+                    >
                       👤 My Profile
                     </li>
-                    <li onClick={() => { setShowUserMenu(false); navigate("/orders"); }}>
+                    <li
+                      onClick={() => {
+                        setShowUserMenu(false);
+                        navigate("/orders");
+                      }}
+                    >
                       📦 My Orders
                     </li>
-                    <li onClick={() => { setShowUserMenu(false); navigate("/profile?tab=addresses"); }}>
+                    <li
+                      onClick={() => {
+                        setShowUserMenu(false);
+                        navigate("/profile?tab=addresses");
+                      }}
+                    >
                       📍 Saved Addresses
                     </li>
-                    <li onClick={() => { setShowUserMenu(false); navigate("/profile?tab=password"); }}>
+                    <li
+                      onClick={() => {
+                        setShowUserMenu(false);
+                        navigate("/profile?tab=password");
+                      }}
+                    >
                       🔒 Reset Password
                     </li>
                     {user.role_id === 1 && (
-                      <li onClick={() => { setShowUserMenu(false); navigate("/admin"); }}>
+                      <li
+                        onClick={() => {
+                          setShowUserMenu(false);
+                          navigate("/admin");
+                        }}
+                      >
                         ⚙️ Admin Panel
                       </li>
                     )}
@@ -205,15 +261,15 @@ export default function Navbar({ onOpenLogin, onOpenRegister }) {
               )}
             </div>
           ) : (
-            <button id="log" onClick={onOpenLogin}>Login</button>
+            <button id="log" onClick={onOpenLogin}>
+              Login
+            </button>
           )}
         </div>
-
       </div>
 
       {/* BAR 2  */}
       <div id="bar2">
-
         {/* All — no mega menu */}
         <div id="all">
           <span onClick={() => navigate("/products")}>All</span>
@@ -229,7 +285,9 @@ export default function Navbar({ onOpenLogin, onOpenRegister }) {
           >
             <span
               className={`bar2-link ${hoveredUpper === name ? "bar2-active" : ""}`}
-              onClick={() => navigate(`/products?upper=${encodeURIComponent(name)}`)}
+              onClick={() =>
+                navigate(`/products?upper=${encodeURIComponent(name)}`)
+              }
             >
               {name}
             </span>
@@ -284,9 +342,7 @@ export default function Navbar({ onOpenLogin, onOpenRegister }) {
             )}
           </div>
         ))}
-
       </div>
-
     </div>
   );
 }

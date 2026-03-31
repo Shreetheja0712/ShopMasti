@@ -9,10 +9,15 @@ import "./Profile.css";
 
 export default function ProfilePage() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { user, logout } = useAuth();
 
   const [tab, setTab] = useState(searchParams.get("tab") || "details");
+
+  const handleTabChange = (key) => {
+    setTab(key);
+    setSearchParams({ tab: key });
+  };
   const [profile, setProfile] = useState(null);
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -111,7 +116,7 @@ export default function ProfilePage() {
               { key: "password", label: "Reset Password" },
             ].map((t) => (
               <button key={t.key} className={`profile-tab ${tab === t.key ? "active" : ""}`}
-                onClick={() => setTab(t.key)}>
+                onClick={() => handleTabChange(t.key)}>
                 {t.label}
               </button>
             ))}

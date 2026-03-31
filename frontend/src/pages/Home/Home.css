@@ -1,5 +1,5 @@
 
-* { color: white; }
+/* Removed global "* { color: white }" — was overriding popups/forms. Scoped to navbar bars instead. */
 
 a { text-decoration: none; }
 
