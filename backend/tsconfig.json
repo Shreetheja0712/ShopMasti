@@ -14,8 +14,9 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
-    "moduleResolution": "bundler"
+    "ignoreDeprecations": "6.0",
+    "moduleResolution": "node"
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*","prisma.config.ts"],
   "exclude": ["node_modules", "dist"]
 }
