@@ -12,6 +12,7 @@ import EventViewer from "./pages/Events/EventViewer";
 import OrdersPage from "./pages/Orders/OrdersPage";
 import OrderConfirmation from "./pages/Orders/OrderConfirmation";
 import ProfilePage from "./pages/Profile/ProfilePage";
+import AdminLayout from "./pages/Admin/AdminLayout";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/orders" element={<OrdersPage />} />
         <Route path="/order-confirmation" element={<OrderConfirmation />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/admin" element={<AdminLayout />} />
       </Routes>
     </AuthProvider>
   );
