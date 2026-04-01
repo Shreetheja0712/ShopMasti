@@ -1,32 +1,17 @@
 generator client {
   provider = "prisma-client-js"
-  
 }
 
 datasource db {
   provider = "postgresql"
-  url = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
-
-enum OrderStatus {
-  PENDING
-  SHIPPED
-  DELIVERED
-  CANCELLED
-}
-
-enum PaymentStatus {
-  PENDING
-  SUCCESS
-  FAILED
-}
-
 
 model Role {
-  id    Int     @id @default(autoincrement())
-  name  String  @unique
+  id          Int     @id @default(autoincrement())
+  name        String  @unique
   description String?
-  users User[]
+  users       User[]
 }
 
 model User {
@@ -39,183 +24,174 @@ model User {
   is_active     Boolean   @default(true)
   created_at    DateTime  @default(now())
   updated_at    DateTime  @updatedAt
-
   role_id       Int
-  role          Role      @relation(fields: [role_id], references: [id])
-
+  addresses     Address[]
   cart          Cart[]
   orders        Orders[]
-  addresses     Address[]
   reviews       Review[]
+  role          Role      @relation(fields: [role_id], references: [id])
 }
+
 model UpperCategory {
-  id          Int            @id @default(autoincrement())
-  name        String         @unique
+  id          Int        @id @default(autoincrement())
+  name        String     @unique
   description String?
-  is_active   Boolean        @default(true)
-  created_at  DateTime       @default(now())
-  updated_at  DateTime       @updatedAt
-
-  categories   Category[]
+  is_active   Boolean    @default(true)
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @updatedAt
+  categories  Category[]
 }
+
 model Category {
-  id          Int            @id @default(autoincrement())
-  name        String         @unique
+  id                Int            @id @default(autoincrement())
+  name              String         @unique
+  description       String?
+  is_active         Boolean        @default(true)
+  created_at        DateTime       @default(now())
+  updated_at        DateTime       @updatedAt
   upper_category_id Int?
-  description String?
-  is_active   Boolean        @default(true)
-  created_at  DateTime       @default(now())
-  updated_at  DateTime       @updatedAt
-  upper_category UpperCategory? @relation(fields: [upper_category_id], references: [id])
-
-  subcategories SubCategory[]
+  upper_category    UpperCategory? @relation(fields: [upper_category_id], references: [id])
+  subcategories     SubCategory[]
 }
+
 model SubCategory {
-  id           Int       @id @default(autoincrement())
-  name         String
-  description  String?
-  is_active    Boolean   @default(true)
-  created_at   DateTime  @default(now())
-  updated_at   DateTime  @updatedAt
-
-  category_id  Int
-  category     Category  @relation(fields: [category_id], references: [id])
-
-  items        Item[]
-  events       EventSubCategory[]
+  id          Int                @id @default(autoincrement())
+  name        String
+  description String?
+  is_active   Boolean            @default(true)
+  created_at  DateTime           @default(now())
+  updated_at  DateTime           @updatedAt
+  category_id Int
+  events      EventSubCategory[]
+  items       Item[]
+  category    Category           @relation(fields: [category_id], references: [id])
 
   @@unique([name, category_id])
 }
-model Item {
-  id              Int       @id @default(autoincrement())
-  name            String
-  description     String?
-  base_discount   Decimal?  @db.Decimal(5,2)
-  is_active       Boolean   @default(true)
-  created_at      DateTime  @default(now())
-  updated_at      DateTime  @updatedAt
 
-  subcategory_id  Int
-  subcategory     SubCategory @relation(fields: [subcategory_id], references: [id])
-  
-  reviews         Review[]
-  variants        ItemVariant[]
+model Item {
+  id             Int           @id @default(autoincrement())
+  name           String
+  description    String?
+  base_discount  Decimal?      @db.Decimal(5, 2)
+  is_active      Boolean       @default(true)
+  created_at     DateTime      @default(now())
+  updated_at     DateTime      @updatedAt
+  subcategory_id Int
+  subcategory    SubCategory   @relation(fields: [subcategory_id], references: [id])
+  variants       ItemVariant[]
+  reviews        Review[]
 }
+
 model ItemVariant {
-  id             Int       @id @default(autoincrement())
+  id             Int            @id @default(autoincrement())
   color          String
   size           String
-  price          Decimal   @db.Decimal(10,2)
+  price          Decimal        @db.Decimal(10, 2)
   stock          Int
-  reserved_stock Int       @default(0)
-  is_active      Boolean   @default(true)
-  created_at     DateTime  @default(now())
-  updated_at     DateTime  @updatedAt
-
+  reserved_stock Int            @default(0)
+  is_active      Boolean        @default(true)
+  created_at     DateTime       @default(now())
+  updated_at     DateTime       @updatedAt
   item_id        Int
-  item           Item      @relation(fields: [item_id], references: [id])
-
-  images         VariantImage[]
   cart           Cart[]
+  item           Item           @relation(fields: [item_id], references: [id])
   orderItems     OrderItem[]
-  
+  images         VariantImage[]
 
   @@unique([item_id, color, size])
 }
-model VariantImage {
-  id         Int      @id @default(autoincrement())
-  image_url  String
-  is_primary Boolean  @default(false)
-  created_at DateTime @default(now())
 
+model VariantImage {
+  id         Int         @id @default(autoincrement())
+  image_url  String
+  is_primary Boolean     @default(false)
+  created_at DateTime    @default(now())
   variant_id Int
   variant    ItemVariant @relation(fields: [variant_id], references: [id])
 }
 
 model EventType {
-  id           Int      @id @default(autoincrement())
-  name         String   @unique
-  description  String?
-  banner_image String?
-  is_active    Boolean  @default(true)
-  created_at   DateTime @default(now())
-  updated_at   DateTime @updatedAt
-
-  subcategories EventSubCategory[]
-  discounts     EventDiscount[]
+  id            Int                @id @default(autoincrement())
+  name          String             @unique
+  description   String?
+  banner_image  String?
+  is_active     Boolean            @default(true)
+  created_at    DateTime           @default(now())
+  updated_at    DateTime           @updatedAt
   cart          Cart[]
+  discounts     EventDiscount[]
+  subcategories EventSubCategory[]
   orders        Orders[]
 }
-model EventSubCategory {
-  event_id        Int
-  subcategory_id  Int
-  description      String?
-  created_at      DateTime @default(now())
 
-  event           EventType   @relation(fields: [event_id], references: [id])
-  subcategory     SubCategory @relation(fields: [subcategory_id], references: [id])
+model EventSubCategory {
+  event_id       Int
+  subcategory_id Int
+  created_at     DateTime    @default(now())
+  description    String?
+  event          EventType   @relation(fields: [event_id], references: [id])
+  subcategory    SubCategory @relation(fields: [subcategory_id], references: [id])
 
   @@id([event_id, subcategory_id])
 }
+
 model Cart {
-  id        Int      @id @default(autoincrement())
+  id         Int         @id @default(autoincrement())
   user_id    Int
   variant_id Int
   event_id   Int?
   quantity   Int
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  event      EventType?  @relation(fields: [event_id], references: [id])
   user       User        @relation(fields: [user_id], references: [id])
   variant    ItemVariant @relation(fields: [variant_id], references: [id])
-  event      EventType?  @relation(fields: [event_id], references: [id])
 
   @@unique([user_id, variant_id, event_id])
 }
-model Orders {
-  id              Int       @id @default(autoincrement())
-  order_date      DateTime  @default(now())
-  status          OrderStatus
-  payment_method  String
-  payment_status  PaymentStatus
-  order_total     Decimal   @db.Decimal(10,2)
-  discount_amount Decimal   @db.Decimal(10,2)
-  final_amount    Decimal   @db.Decimal(10,2)
-  created_at      DateTime  @default(now())
-  updated_at      DateTime  @updatedAt
 
+model Orders {
+  id              Int                  @id @default(autoincrement())
+  order_date      DateTime             @default(now())
+  status          String
+  payment_method  String
+  payment_status  String
+  order_total     Decimal              @db.Decimal(10, 2)
+  discount_amount Decimal              @db.Decimal(10, 2)
+  final_amount    Decimal              @db.Decimal(10, 2)
+  created_at      DateTime             @default(now())
+  updated_at      DateTime             @updatedAt
   user_id         Int
   event_id        Int?
   address_id      Int
-
-  user            User        @relation(fields: [user_id], references: [id])
-  event           EventType?  @relation(fields: [event_id], references: [id])
-  address         Address     @relation(fields: [address_id], references: [id])
-
   items           OrderItem[]
+  address         Address              @relation(fields: [address_id], references: [id])
+  event           EventType?           @relation(fields: [event_id], references: [id])
+  user            User                 @relation(fields: [user_id], references: [id])
   transactions    PaymentTransaction[]
 }
+
 model OrderItem {
   order_id   Int
   variant_id Int
   quantity   Int
-  unit_price Decimal   @db.Decimal(10,2)
-  sub_total  Decimal   @db.Decimal(10,2)
-  created_at DateTime  @default(now())
-
+  unit_price Decimal     @db.Decimal(10, 2)
+  sub_total  Decimal     @db.Decimal(10, 2)
+  created_at DateTime    @default(now())
   order      Orders      @relation(fields: [order_id], references: [id])
   variant    ItemVariant @relation(fields: [variant_id], references: [id])
 
   @@id([order_id, variant_id])
 }
-model EventDiscount {
-  id                  Int      @id @default(autoincrement())
-  min_purchase_amount Decimal  @db.Decimal(10,2)
-  discount_amount     Decimal  @db.Decimal(10,2)
-  is_active           Boolean  @default(true)
-  created_at          DateTime @default(now())
-  updated_at          DateTime @updatedAt
 
+model EventDiscount {
+  id                  Int       @id @default(autoincrement())
+  min_purchase_amount Decimal   @db.Decimal(10, 2)
+  discount_amount     Decimal   @db.Decimal(10, 2)
+  is_active           Boolean   @default(true)
+  created_at          DateTime  @default(now())
+  updated_at          DateTime  @updatedAt
   event_id            Int
   event               EventType @relation(fields: [event_id], references: [id])
 }
@@ -234,35 +210,65 @@ model Address {
   is_default    Boolean  @default(false)
   created_at    DateTime @default(now())
   updated_at    DateTime @updatedAt
-
   user_id       Int
   user          User     @relation(fields: [user_id], references: [id])
-
   orders        Orders[]
 }
+
 model PaymentTransaction {
   id               Int      @id @default(autoincrement())
   payment_gateway  String?
   transaction_id   String   @unique
-  amount           Decimal  @db.Decimal(10,2)
+  amount           Decimal  @db.Decimal(10, 2)
   currency         String?
   status           String
   gateway_response String?
   created_at       DateTime @default(now())
   updated_at       DateTime @updatedAt
-
   order_id         Int
   order            Orders   @relation(fields: [order_id], references: [id])
 }
+
 model Review {
   user_id    Int
-  item_id Int
+  item_id    Int
   rating     Int
   comment    String?
   created_at DateTime @default(now())
-
-  user       User        @relation(fields: [user_id], references: [id])
-  item       Item        @relation(fields: [item_id], references: [id])
+  item       Item     @relation(fields: [item_id], references: [id])
+  user       User     @relation(fields: [user_id], references: [id])
 
   @@id([user_id, item_id])
+}
+
+model Order {
+  id              Int           @id @default(autoincrement())
+  order_date      DateTime      @default(now())
+  status          OrderStatus
+  payment_method  String
+  payment_status  PaymentStatus
+  order_total     Decimal       @db.Decimal(10, 2)
+  discount_amount Decimal       @db.Decimal(10, 2)
+  final_amount    Decimal       @db.Decimal(10, 2)
+  created_at      DateTime      @default(now())
+  updated_at      DateTime
+  user_id         Int
+  event_id        Int?
+  address_id      Int
+
+  @@index([address_id])
+  @@index([user_id])
+}
+
+enum OrderStatus {
+  PENDING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
 }
