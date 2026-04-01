@@ -4,13 +4,21 @@ const getUpperCategories = async (req, res) => {
   try {
     const data = await prisma.upperCategory.findMany({
       where: { is_active: true },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        is_active: true,
         categories: {
           where: { is_active: true },
-          include: {
-            subcategories: { where: { is_active: true }, select: { id: true, name: true } },
+          select: {
+            id: true,
+            name: true,
+            is_active: true,
+            subcategories: {
+              where: { is_active: true },
+              select: { id: true, name: true, is_active: true },
+            },
           },
-          select: { id: true, name: true, subcategories: true },
         },
       },
       orderBy: { id: 'asc' },

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { authFetch } from "../../../utils/api";
 
-const STATUSES = ["placed", "confirmed", "shipped", "delivered", "cancelled"];
+const STATUSES = ["pending", "shipped", "delivered", "cancelled"];
 
 export default function AdminOrders() {
   const [orders, setOrders]       = useState([]);

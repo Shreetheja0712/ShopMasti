@@ -34,7 +34,7 @@ function ProductsPage() {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchProducts(); },
-    [selectedCategory, selectedSubCategory, sortBy, priceMin, priceMax, inStockOnly, searchQuery]);
+    [selectedCategory, selectedSubCategory, sortBy, priceMin, priceMax, inStockOnly, searchQuery,upperFilter]);
 
   const fetchCategories = async () => {
     try {

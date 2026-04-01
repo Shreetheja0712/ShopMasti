@@ -39,7 +39,10 @@ export default function Navbar({ onOpenLogin, onOpenRegister }) {
     apiFetch("/upper-categories")
       .then((r) => r.json())
       .then((d) => {
-        if (Array.isArray(d)) setUpperCategories(d);
+        if (Array.isArray(d)) {
+          console.log("Upper categories with nested data:", d);
+          setUpperCategories(d);
+        }
       })
       .catch(() => {});
   }, []);
