@@ -1,6 +1,16 @@
 import React, { useState } from "react";
 import { apiFetch } from "../../utils/api";
 import "./Auth.css";
+import { customList } from "country-codes-list";
+
+const COUNTRIES = Object.entries(
+  customList("countryCode", "{countryNameEn}|{countryCallingCode}|{flag}"),
+)
+  .map(([_, entry]) => {
+    const [name, code, flag] = entry.split("|");
+    return { name, code: `+${code}`, flag };
+  })
+  .filter((c) => c.code !== "+");
 
 function Register({ switchToLogin }) {
   const [formData, setFormData] = useState({
@@ -8,13 +18,20 @@ function Register({ switchToLogin }) {
     email: "",
     password: "",
     confirmPassword: "",
+    phone: "",
   });
+  const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleCountryChange = (e) => {
+    const country = COUNTRIES[e.target.value];
+    setSelectedCountry(country);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,7 +41,8 @@ function Register({ switchToLogin }) {
       !formData.username ||
       !formData.email ||
       !formData.password ||
-      !formData.confirmPassword
+      !formData.confirmPassword ||
+      !formData.phone
     ) {
       setError("Please fill in all fields");
       return;
@@ -34,12 +52,33 @@ function Register({ switchToLogin }) {
       setError("Passwords do not match");
       return;
     }
+    //validate phone number
+    if (!/^\d{7,15}$/.test(formData.phone)) {
+      setError("Phone number must be 7-15 digits");
+      return;
+    }
+    //validate email
+    if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)) {
+      setError("Enter a valid email address");
+      return;
+    }
+
     setLoading(true);
     try {
+      const payload = {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+        confirmPassword: formData.confirmPassword,
+        // Include the selected country and phone number in the payload
+        mobile_number: `${selectedCountry.code}${formData.phone}`,
+        country: selectedCountry.name,
+      };
+
       const res = await apiFetch("/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (res.ok) {
@@ -49,7 +88,9 @@ function Register({ switchToLogin }) {
           email: "",
           password: "",
           confirmPassword: "",
+          phone: "",
         });
+        setSelectedCountry(COUNTRIES[0]);
         setTimeout(() => {
           if (switchToLogin) switchToLogin();
         }, 1500);
@@ -97,6 +138,33 @@ function Register({ switchToLogin }) {
             onChange={handleChange}
             required
           />
+          <label className="auth-label">Phone Number</label>
+          <div className="auth-phone-row">
+            <select
+              className="auth-country-select"
+              onChange={handleCountryChange}
+              defaultValue={0}
+            >
+              {COUNTRIES.map((c, i) => (
+                <option key={i} value={i}>
+                  {c.flag} {c.code} {c.name}
+                </option>
+              ))}
+            </select>
+            <input
+              className="auth-phone-input"
+              type="tel"
+              placeholder="Phone number"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <p className="auth-field-hint">
+            Country: <strong>{selectedCountry.name}</strong> will be saved to
+            your profile
+          </p>
           <label className="auth-label">Password</label>
           <input
             type="password"
