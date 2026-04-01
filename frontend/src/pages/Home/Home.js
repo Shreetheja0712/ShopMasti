@@ -29,11 +29,24 @@ function Home() {
     return () => clearInterval(t);
   }, [slides.length]);
 
+  useEffect(() => {
+    document.body.style.overflow = loginOpen || registerOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [loginOpen, registerOpen]);
+
   return (
     <>
       <Navbar
-        onOpenLogin={() => setLoginOpen(true)}
-        onOpenRegister={() => setRegisterOpen(true)}
+        onOpenLogin={() => {
+          setRegisterOpen(false);
+          setLoginOpen(true);
+        }}
+        onOpenRegister={() => {
+          setLoginOpen(false);
+          setRegisterOpen(true);
+        }}
       />
 
       {/* Push content below fixed navbar (75px bar1 + 28px bar2) */}

@@ -68,6 +68,18 @@ export default function Navbar({ onOpenLogin, onOpenRegister }) {
     navigate("/");
   };
 
+  const closeTransientUi = () => {
+    setShowUserMenu(false);
+    setShowEventFlyout(false);
+    setHoveredUpper(null);
+    setCartMsg(false);
+  };
+
+  const handleOpenLogin = () => {
+    closeTransientUi();
+    if (onOpenLogin) onOpenLogin();
+  };
+
   const handleCartClick = (e) => {
     if (!isLoggedIn()) {
       e.preventDefault();
@@ -183,7 +195,7 @@ export default function Navbar({ onOpenLogin, onOpenRegister }) {
               <button
                 onClick={() => {
                   setCartMsg(false);
-                  onOpenLogin();
+                  handleOpenLogin();
                 }}
               >
                 Login
@@ -261,7 +273,7 @@ export default function Navbar({ onOpenLogin, onOpenRegister }) {
               )}
             </div>
           ) : (
-            <button id="log" onClick={onOpenLogin}>
+            <button id="log" onClick={handleOpenLogin}>
               Login
             </button>
           )}
