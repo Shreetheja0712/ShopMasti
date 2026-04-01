@@ -17,7 +17,7 @@ const register = async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
-      data: { username, email, password: hashedPassword, mobile_number, role_id: 2 },
+      data: { username, email, password: hashedPassword, mobile_number, role_id: 1 },
     });
     const token = jwt.sign(
       { userId: user.id, role: user.role_id },
