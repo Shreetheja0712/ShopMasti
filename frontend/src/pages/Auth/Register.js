@@ -147,7 +147,7 @@ function Register({ switchToLogin }) {
             >
               {COUNTRIES.map((c, i) => (
                 <option key={i} value={i}>
-                  {c.flag} {c.code} {c.name}
+                  {c.flag} {c.code}
                 </option>
               ))}
             </select>

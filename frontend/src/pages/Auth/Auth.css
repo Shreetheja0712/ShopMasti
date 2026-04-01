@@ -155,7 +155,7 @@
 
 .auth-country-select {
   flex: 0 0 auto;
-  width: 160px;
+  width: 100px;
   padding: 8px 6px;
   border: 1px solid #ccc;
   border-radius: 6px;
