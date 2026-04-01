@@ -160,16 +160,20 @@ function EventGroup({ group, onQtyChange, onRemove, onPlaceOrder }) {
               <span>Total</span>
               <span>₹{final.toFixed(2)}</span>
             </div>
-            {eventDisc === 0 && group.discounts?.filter(d => d.is_active).length > 0 && (
-              <div className="cg-disc-hint">
-                Add ₹
-                {(
-                  parseFloat(group.discounts.filter(d => d.is_active)[0].min_purchase_amount) -
-                  afterProductDisc
-                ).toFixed(2)}{" "}
-                more to unlock event discount!
-              </div>
-            )}
+            {eventDisc === 0 && group.discounts?.filter(d => d.is_active).length > 0 && (() => {
+              // Find the most achievable tier: lowest min_purchase_amount above current spend
+              const activeDiscounts = group.discounts.filter(d => d.is_active);
+              const nextTier = activeDiscounts
+                .filter(d => parseFloat(d.min_purchase_amount) > afterProductDisc)
+                .sort((a, b) => parseFloat(a.min_purchase_amount) - parseFloat(b.min_purchase_amount))[0];
+              if (!nextTier) return null;
+              const amountNeeded = parseFloat(nextTier.min_purchase_amount) - afterProductDisc;
+              return (
+                <div className="cg-disc-hint">
+                  Add ₹{amountNeeded.toFixed(2)} more to unlock ₹{parseFloat(nextTier.discount_amount).toFixed(2)} event discount!
+                </div>
+              );
+            })()}
             <button
               className="cg-order-btn"
               onClick={() => onPlaceOrder(group.eventId, group.items, final)}

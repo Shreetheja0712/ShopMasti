@@ -255,7 +255,7 @@ export default function Navbar({ onOpenLogin, onOpenRegister }) {
                     >
                       🔒 Reset Password
                     </li>
-                    {user.role_id === 1 && (
+                    {user.role_id === 2 && (
                       <li
                         onClick={() => {
                           setShowUserMenu(false);

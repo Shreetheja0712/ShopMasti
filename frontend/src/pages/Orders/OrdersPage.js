@@ -7,8 +7,7 @@ import { authFetch, isLoggedIn } from "../../utils/api";
 import "./Orders.css";
 
 const STATUS_COLORS = {
-  placed:    { bg: "#eff6ff", color: "#2563eb" },
-  confirmed: { bg: "#eff6ff", color: "#2563eb" },
+  pending:   { bg: "#fef3c7", color: "#b45309" },
   shipped:   { bg: "#fefce8", color: "#ca8a04" },
   delivered: { bg: "#dcfce7", color: "#16a34a" },
   cancelled: { bg: "#fee2e2", color: "#dc2626" },

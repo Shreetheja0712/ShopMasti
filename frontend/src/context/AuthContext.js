@@ -17,7 +17,7 @@ export function AuthProvider({ children }) {
       setUser({
         userId: storedUserId,
         username: storedUsername || "",
-        role_id: storedRoleId ? Number(storedRoleId) : 2,
+        role_id: storedRoleId ? Number(storedRoleId) : 1,
       });
     }
   }, []);
@@ -26,12 +26,12 @@ export function AuthProvider({ children }) {
     localStorage.setItem("token", data.token);
     localStorage.setItem("userId", data.userId);
     localStorage.setItem("username", data.username || "");
-    localStorage.setItem("role_id", data.role_id || 2);
+    localStorage.setItem("role_id", data.role_id || 1);
     setToken(data.token);
     setUser({
       userId: data.userId,
       username: data.username || "",
-      role_id: data.role_id || 2,
+      role_id: data.role_id || 1,
     });
   };
 
@@ -45,7 +45,7 @@ export function AuthProvider({ children }) {
   };
 
   const isLoggedIn = () => !!token;
-  const isAdmin = () => user?.role_id === 1;
+  const isAdmin = () => user?.role_id === 2;
 
   return (
     <AuthContext.Provider value={{ user, token, login, logout, isLoggedIn, isAdmin }}>
