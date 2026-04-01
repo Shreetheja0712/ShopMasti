@@ -1,132 +1,215 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import Navbar from "../../components/Navbar/Navbar";
-import Footer from "../../components/Footer/Footer";
-import Login from "../Auth/Login";
-import Register from "../Auth/Register";
-import "./Home.css";
+import React, { useState } from "react";
+import { apiFetch } from "../../utils/api";
+import "./Auth.css";
+import { customList } from "country-codes-list";
 
-function Home() {
-  const navigate = useNavigate();
-  const location = useLocation();
+const COUNTRIES = Object.entries(
+  customList("countryCode", "{countryNameEn}|{countryCallingCode}|{flag}")
+)
+  .map(([_, entry]) => {
+    const [name, code, flag] = entry.split("|");
+    return { name, code: `+${code}`, flag };
+  })
+  .filter((c) => c.code !== "+");
 
-  // Auto-open login if redirected here with openLogin flag (e.g. from Cart)
-  const [loginOpen, setLoginOpen] = useState(
-    location.state?.openLogin || false
-  );
-  const [registerOpen, setRegisterOpen] = useState(false);
-  const [slideIndex, setSlideIndex] = useState(0);
+function Register({ switchToLogin }) {
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    phone: "",
+  });
 
-  const slides = [
-    { bg: "#1a237e", label: "Wedding Season Deals",   sub: "Up to 40% off on bridal collections" },
-    { bg: "#880e4f", label: "New Home Essentials",     sub: "Everything you need to set up your dream home" },
-    { bg: "#1b5e20", label: "Relocation Bundles",      sub: "Smart packs for your big move abroad" },
-  ];
+  const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // Auto-advance slider
-  useEffect(() => {
-    const t = setInterval(() => setSlideIndex((i) => (i + 1) % slides.length), 3500);
-    return () => clearInterval(t);
-  }, [slides.length]);
+  const handleChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  useEffect(() => {
-    document.body.style.overflow = loginOpen || registerOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [loginOpen, registerOpen]);
+  const handleCountryChange = (e) => {
+    const country = COUNTRIES[e.target.value];
+    setSelectedCountry(country);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (
+      !formData.username ||
+      !formData.email ||
+      !formData.password ||
+      !formData.confirmPassword ||
+      !formData.phone
+    ) {
+      setError("Please fill in all fields");
+      return;
+    }
+
+    // password match
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    // strong password validation
+    if (
+      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/.test(
+        formData.password
+      )
+    ) {
+      setError(
+        "Password must be at least 6 characters and include uppercase, lowercase, number, and special symbol"
+      );
+      return;
+    }
+
+    // phone validation
+    if (!/^\d{7,15}$/.test(formData.phone)) {
+      setError("Phone number must be 7-15 digits");
+      return;
+    }
+
+    // gmail validation
+    if (!/^[A-Z0-9._%+-]+@gmail\.com$/i.test(formData.email)) {
+      setError("Only Gmail addresses are allowed");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const payload = {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+        mobile_number: `${selectedCountry.code}${formData.phone}`,
+        country: selectedCountry.name,
+      };
+
+      const res = await apiFetch("/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        // 🔥 AUTO LOGIN
+        localStorage.setItem("token", data.token);
+
+        // redirect to home/dashboard
+        window.location.href = "/";
+      } else {
+        setError(data.error || "Registration failed.");
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <>
-      <Navbar
-        onOpenLogin={() => {
-          setRegisterOpen(false);
-          setLoginOpen(true);
-        }}
-        onOpenRegister={() => {
-          setLoginOpen(false);
-          setRegisterOpen(true);
-        }}
-      />
-
-      {/* Push content below fixed navbar (75px bar1 + 28px bar2) */}
-      <div style={{ paddingTop: "103px" }}>
-
-        {/* ── Hero Slider ── */}
-        <div id="display" style={{ background: slides[slideIndex].bg, height: "220px", position: "relative", transition: "background 0.6s" }}>
-          <button id="btt1" onClick={() => setSlideIndex((i) => (i - 1 + slides.length) % slides.length)}>&#8249;</button>
-          <div className="hero-content">
-            <h1>{slides[slideIndex].label}</h1>
-            <p>{slides[slideIndex].sub}</p>
-            <button className="hero-cta" onClick={() => navigate("/events")}>
-              Shop by Event →
-            </button>
-          </div>
-          <button id="btt2" onClick={() => setSlideIndex((i) => (i + 1) % slides.length)}>&#8250;</button>
-          <div className="hero-dots">
-            {slides.map((_, i) => (
-              <span
-                key={i}
-                className={`hero-dot ${i === slideIndex ? "active" : ""}`}
-                onClick={() => setSlideIndex(i)}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* ── Amazing Deals ── */}
-        <div className="offers">
-          <h1 id="of1">AMAZING DEALS</h1>
-        </div>
-
-        {/* ── Product placeholder grid 1 ── */}
-        <div className="cl1">
-          <div id="b1"></div>
-          <div id="b2"></div>
-          <div id="b3"></div>
-        </div>
-
-        {/* ── Trending Now ── */}
-        <div className="offers" style={{ marginTop: 0 }}>
-          <h1 id="of1">TRENDING NOW</h1>
-        </div>
-
-        {/* ── Product placeholder grid 2 ── */}
-        <div className="cl2">
-          <div id="b4"></div>
-          <div id="b5"></div>
-          <div id="b6"></div>
-        </div>
-
-        <Footer />
+    <div className="auth-container">
+      <div className="auth-left">
+        <h2>
+          Join <span>ShopMasti</span>
+        </h2>
+        <p>Shop smarter with event-based bundles.</p>
+        <p className="auth-small-text">
+          Create your account to start shopping for every life event.
+        </p>
       </div>
 
-      {/* ── Login popup ── */}
-      {loginOpen && (
-        <div className="popup-overlay" onClick={() => setLoginOpen(false)}>
-          <div className="popup-box" onClick={(e) => e.stopPropagation()}>
-            <button className="popup-close" onClick={() => setLoginOpen(false)}>×</button>
-            <Login
-              switchToRegister={() => { setLoginOpen(false); setRegisterOpen(true); }}
-              onSuccess={() => setLoginOpen(false)}
-            />
-          </div>
-        </div>
-      )}
+      <div className="auth-right">
+        <h3>Sign Up</h3>
 
-      {/* ── Register popup ── */}
-      {registerOpen && (
-        <div className="popup-overlay" onClick={() => setRegisterOpen(false)}>
-          <div className="popup-box" onClick={(e) => e.stopPropagation()}>
-            <button className="popup-close" onClick={() => setRegisterOpen(false)}>×</button>
-            <Register
-              switchToLogin={() => { setRegisterOpen(false); setLoginOpen(true); }}
+        {error && <p className="auth-error">{error}</p>}
+
+        <form onSubmit={handleSubmit}>
+          <label className="auth-label">Username</label>
+          <input
+            type="text"
+            placeholder="Enter username"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+          />
+
+          <label className="auth-label">Email</label>
+          <input
+            type="email"
+            placeholder="Enter your gmail"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+
+          <label className="auth-label">Phone Number</label>
+          <div className="auth-phone-row">
+            <select onChange={handleCountryChange} defaultValue={0}>
+              {COUNTRIES.map((c, i) => (
+                <option key={i} value={i}>
+                  {c.flag} {c.code}
+                </option>
+              ))}
+            </select>
+
+            <input
+              type="tel"
+              placeholder="Phone number"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              required
             />
           </div>
-        </div>
-      )}
-    </>
+
+          <p>
+            Country: <strong>{selectedCountry.name}</strong>
+          </p>
+
+          <label className="auth-label">Password</label>
+          <input
+            type="password"
+            placeholder="Enter password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+
+          <label className="auth-label">Confirm Password</label>
+          <input
+            type="password"
+            placeholder="Confirm password"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            required
+          />
+
+          <button type="submit" disabled={loading}>
+            {loading ? "Creating account..." : "Sign Up"}
+          </button>
+        </form>
+
+        {switchToLogin && (
+          <p>
+            Already have an account?{" "}
+            <span onClick={switchToLogin}>Log In</span>
+          </p>
+        )}
+      </div>
+    </div>
   );
 }
 
-export default Home;
+export default Register;

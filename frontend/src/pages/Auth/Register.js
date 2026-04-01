@@ -4,7 +4,7 @@ import "./Auth.css";
 import { customList } from "country-codes-list";
 
 const COUNTRIES = Object.entries(
-  customList("countryCode", "{countryNameEn}|{countryCallingCode}|{flag}"),
+  customList("countryCode", "{countryNameEn}|{countryCallingCode}|{flag}")
 )
   .map(([_, entry]) => {
     const [name, code, flag] = entry.split("|");
@@ -20,6 +20,7 @@ function Register({ switchToLogin }) {
     confirmPassword: "",
     phone: "",
   });
+
   const [selectedCountry, setSelectedCountry] = useState(COUNTRIES[0]);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
@@ -37,6 +38,7 @@ function Register({ switchToLogin }) {
     e.preventDefault();
     setError("");
     setMessage("");
+
     if (
       !formData.username ||
       !formData.email ||
@@ -48,29 +50,44 @@ function Register({ switchToLogin }) {
       return;
     }
 
+    // password match
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
       return;
     }
-    //validate phone number
+
+    // 🔒 strong password validation
+    if (
+      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/.test(
+        formData.password
+      )
+    ) {
+      setError(
+        "Password must be at least 6 characters and include uppercase, lowercase, number, and special symbol"
+      );
+      return;
+    }
+
+    // validate phone number
     if (!/^\d{7,15}$/.test(formData.phone)) {
       setError("Phone number must be 7-15 digits");
       return;
     }
-    //validate email
-    if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)) {
-      setError("Enter a valid email address");
+
+    // validate email (only gmail)
+    if (!/^[A-Z0-9._%+-]+@gmail\.com$/i.test(formData.email)) {
+      setError("Only Gmail addresses are allowed");
       return;
     }
 
     setLoading(true);
+
     try {
       const payload = {
         username: formData.username,
         email: formData.email,
         password: formData.password,
         confirmPassword: formData.confirmPassword,
-        // Include the selected country and phone number in the payload
         mobile_number: `${selectedCountry.code}${formData.phone}`,
         country: selectedCountry.name,
       };
@@ -80,7 +97,9 @@ function Register({ switchToLogin }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
+
       const data = await res.json();
+
       if (res.ok) {
         setMessage("Registration successful! Please log in.");
         setFormData({
@@ -91,6 +110,7 @@ function Register({ switchToLogin }) {
           phone: "",
         });
         setSelectedCountry(COUNTRIES[0]);
+
         setTimeout(() => {
           if (switchToLogin) switchToLogin();
         }, 1500);
@@ -115,10 +135,13 @@ function Register({ switchToLogin }) {
           Create your account to start shopping for every life event.
         </p>
       </div>
+
       <div className="auth-right">
         <h3>Sign Up</h3>
+
         {error && <p className="auth-error">{error}</p>}
         {message && <p className="auth-success">{message}</p>}
+
         <form onSubmit={handleSubmit}>
           <label className="auth-label">Username</label>
           <input
@@ -129,15 +152,17 @@ function Register({ switchToLogin }) {
             onChange={handleChange}
             required
           />
+
           <label className="auth-label">Email</label>
           <input
             type="email"
-            placeholder="Enter your email"
+            placeholder="Enter your gmail"
             name="email"
             value={formData.email}
             onChange={handleChange}
             required
           />
+
           <label className="auth-label">Phone Number</label>
           <div className="auth-phone-row">
             <select
@@ -151,6 +176,7 @@ function Register({ switchToLogin }) {
                 </option>
               ))}
             </select>
+
             <input
               className="auth-phone-input"
               type="tel"
@@ -161,10 +187,12 @@ function Register({ switchToLogin }) {
               required
             />
           </div>
+
           <p className="auth-field-hint">
             Country: <strong>{selectedCountry.name}</strong> will be saved to
             your profile
           </p>
+
           <label className="auth-label">Password</label>
           <input
             type="password"
@@ -174,6 +202,7 @@ function Register({ switchToLogin }) {
             onChange={handleChange}
             required
           />
+
           <label className="auth-label">Confirm Password</label>
           <input
             type="password"
@@ -183,13 +212,16 @@ function Register({ switchToLogin }) {
             onChange={handleChange}
             required
           />
+
           <button type="submit" className="auth-btn" disabled={loading}>
             {loading ? "Creating account..." : "Sign Up"}
           </button>
         </form>
+
         {switchToLogin && (
           <p className="auth-switch-text">
-            Already have an account? <span onClick={switchToLogin}>Log In</span>
+            Already have an account?{" "}
+            <span onClick={switchToLogin}>Log In</span>
           </p>
         )}
       </div>
