@@ -1,11 +1,26 @@
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
+  
 }
 
 datasource db {
   provider = "postgresql"
+  url = env("DATABASE_URL")
 }
+
+enum OrderStatus {
+  PENDING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
+
 
 model Role {
   id    Int     @id @default(autoincrement())
@@ -160,9 +175,9 @@ model Cart {
 model Orders {
   id              Int       @id @default(autoincrement())
   order_date      DateTime  @default(now())
-  status          String
+  status          OrderStatus
   payment_method  String
-  payment_status  String
+  payment_status  PaymentStatus
   order_total     Decimal   @db.Decimal(10,2)
   discount_amount Decimal   @db.Decimal(10,2)
   final_amount    Decimal   @db.Decimal(10,2)
