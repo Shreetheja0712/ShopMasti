@@ -86,21 +86,28 @@ export default function EventViewer() {
             <div className="sm-state-center"><p>No categories available for this event yet.</p></div>
           ) : (
             <div className="ev-subcat-grid">
-              {event.subcategories?.map((sub) => (
-                <div key={sub.id || sub.subcategory_id} className="ev-subcat-card"
-                  onClick={() => handleSubcategoryClick(sub.id || sub.subcategory_id)}>
-                  {sub.banner_image ? (
-                    <img src={sub.banner_image} alt={sub.name} className="ev-subcat-img" />
-                  ) : (
-                    <div className="ev-subcat-placeholder">🛍️</div>
-                  )}
-                  <div className="ev-subcat-body">
-                    <h3>{sub.name}</h3>
-                    {sub.event_description && <p>{sub.event_description}</p>}
-                    <span className="ev-subcat-link">View Products →</span>
+              {event.subcategories?.map((sub) => {
+                // Backend returns join table: { id, event_id, subcategory_id, subcategory: { id, name, ... } }
+                const subId = sub.subcategory_id || sub.subcategory?.id || sub.id;
+                const subName = sub.subcategory?.name || sub.name;
+                const subBanner = sub.banner_image || sub.subcategory?.banner_image || null;
+                const subDesc = sub.event_description || sub.subcategory?.description || null;
+                return (
+                  <div key={subId} className="ev-subcat-card"
+                    onClick={() => handleSubcategoryClick(subId)}>
+                    {subBanner ? (
+                      <img src={subBanner} alt={subName} className="ev-subcat-img" />
+                    ) : (
+                      <div className="ev-subcat-placeholder">🛍️</div>
+                    )}
+                    <div className="ev-subcat-body">
+                      <h3>{subName}</h3>
+                      {subDesc && <p>{subDesc}</p>}
+                      <span className="ev-subcat-link">View Products →</span>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>

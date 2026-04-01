@@ -38,9 +38,19 @@ function ProductsPage() {
 
   const fetchCategories = async () => {
     try {
-      const res = await apiFetch("/products/categories");
+      const res = await apiFetch("/upper-categories");
       const data = await res.json();
-      if (res.ok) setCategories(data);
+      // /upper-categories returns: [{ id, name, categories: [{ id, name, subcategories: [{id, name}] }] }]
+      // Flatten all categories with their subcategories for the sidebar filter
+      if (res.ok && Array.isArray(data)) {
+        const allCategories = data.flatMap(upper =>
+          (upper.categories || []).map(cat => ({
+            ...cat,
+            subcategories: cat.subcategories || [],
+          }))
+        );
+        setCategories(allCategories);
+      }
     } catch { }
   };
 

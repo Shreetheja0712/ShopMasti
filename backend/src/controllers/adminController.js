@@ -223,6 +223,7 @@ const deleteSubcategory = async (req, res) => {
 // Orders
 const getAdminOrders = async (req, res) => {
   try {
+    const { limit } = req.query;
     const orders = await prisma.order.findMany({
       include: {
         user: { select: { id: true, username: true, email: true } },
@@ -231,6 +232,7 @@ const getAdminOrders = async (req, res) => {
         event: true,
       },
       orderBy: { created_at: 'desc' },
+      ...(limit ? { take: parseInt(limit) } : {}),
     });
     res.json(orders);
   } catch (err) { res.status(500).json({ error: 'Server error' }); }
