@@ -104,8 +104,8 @@ body {
   font-size: 40px;
   margin-bottom: 20px;
   padding-top: 0px;
-  border-top: 5px dotted green;
-  background-color: yellow;
+  border-top: 5px dotted  #ffffff ;
+  background-color: #131921;
   height: 80px;
   display: flex;
   align-items: center;
@@ -113,7 +113,7 @@ body {
 }
 #of1 {
   margin-top: 0px;
-  color: black;
+  color: #ffa500;
   font-weight: bold;
   font-style: italic;
   font-size: 32px;
@@ -151,4 +151,35 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+.home-banner {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+.home-banner:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  
+}
+.home-banner img {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  background-color: black;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+
+  position: absolute;
+  bottom: -30px;
+  left: 0;
+
+  white-space: nowrap;
+}
+
+.home-banner:hover .tooltip-text {
+  visibility: visible;
 }

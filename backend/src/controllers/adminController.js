@@ -1,4 +1,4 @@
-const prisma = require('../db');
+const prisma = require('../config/db');
 
 // Stats
 const getStats = async (req, res) => {
