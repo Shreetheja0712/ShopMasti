@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import ProductCard from "../../components/ProductCard/ProductCard";
@@ -9,39 +9,48 @@ import Register from "../Auth/Register";
 import "./ProductsPage.css";
 
 function ProductsPage() {
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [loginOpen, setLoginOpen] = useState(false);
+  const [products, setProducts]       = useState([]);
+  const [categories, setCategories]   = useState([]);
+  const [loading, setLoading]         = useState(true);
+  const [error, setError]             = useState("");
+  const [loginOpen, setLoginOpen]     = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
+
+  // Local state only for search input box (so typing doesn't trigger fetch on every keystroke)
+  const [searchInput, setSearchInput] = useState("");
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
-  const [selectedCategory, setSelectedCategory] = useState(searchParams.get("category") || "");
-  const [selectedSubCategory, setSelectedSubCategory] = useState(searchParams.get("subcategory") || "");
-  const [upperFilter] = useState(searchParams.get("upper") || "");
-  const [sortBy, setSortBy] = useState(searchParams.get("sort") || "newest");
-  const [priceMin, setPriceMin] = useState(searchParams.get("minPrice") || "");
-  const [priceMax, setPriceMax] = useState(searchParams.get("maxPrice") || "");
-  const [inStockOnly, setInStockOnly] = useState(searchParams.get("inStock") === "true");
+  // ── All filters read DIRECTLY from URL — never from useState ──
+  const searchQuery       = searchParams.get("q")           || "";
+  const selectedCategory  = searchParams.get("category")    || "";
+  const selectedSubCat    = searchParams.get("subcategory") || "";
+  const upperFilter       = searchParams.get("upper")       || "";
+  const sortBy            = searchParams.get("sort")        || "newest";
+  const priceMin          = searchParams.get("minPrice")    || "";
+  const priceMax          = searchParams.get("maxPrice")    || "";
+  const inStockOnly       = searchParams.get("inStock")     === "true";
+  const eventId           = searchParams.get("eventId")     || null;
 
-  // eventId passed when coming from event viewer
-  const eventId = searchParams.get("eventId") || null;
+  // Sync search input box with URL on mount / URL change
+  useEffect(() => {
+    setSearchInput(searchParams.get("q") || "");
+  }, [searchParams]);
 
+  // Fetch categories once on mount
   useEffect(() => { fetchCategories(); }, []);
 
+  // Re-fetch products whenever ANY url param changes
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchProducts(); },
-    [selectedCategory, selectedSubCategory, sortBy, priceMin, priceMax, inStockOnly, searchQuery,upperFilter]);
+  useEffect(() => { fetchProducts(); }, [
+    searchQuery, selectedCategory, selectedSubCat,
+    upperFilter, sortBy, priceMin, priceMax, inStockOnly, eventId,
+  ]);
 
   const fetchCategories = async () => {
     try {
-      const res = await apiFetch("/upper-categories");
+      const res  = await apiFetch("/upper-categories");
       const data = await res.json();
-      // /upper-categories returns: [{ id, name, categories: [{ id, name, subcategories: [{id, name}] }] }]
-      // Flatten all categories with their subcategories for the sidebar filter
       if (res.ok && Array.isArray(data)) {
         const allCategories = data.flatMap(upper =>
           (upper.categories || []).map(cat => ({
@@ -59,18 +68,17 @@ function ProductsPage() {
     setError("");
     try {
       const params = new URLSearchParams();
-      if (searchQuery) params.set("q", searchQuery);
-      if (selectedCategory) params.set("category", selectedCategory);
-      if (selectedSubCategory) params.set("subcategory", selectedSubCategory);
-      if (upperFilter) params.set("upper", upperFilter);
-      if (sortBy) params.set("sort", sortBy);
-      if (priceMin) params.set("minPrice", priceMin);
-      if (priceMax) params.set("maxPrice", priceMax);
-      if (inStockOnly) params.set("inStock", "true");
-      if (eventId) params.set("eventId", eventId);
-      setSearchParams(params);
+      if (searchQuery)      params.set("q",           searchQuery);
+      if (selectedCategory) params.set("category",    selectedCategory);
+      if (selectedSubCat)   params.set("subcategory", selectedSubCat);
+      if (upperFilter)      params.set("upper",       upperFilter);
+      if (sortBy)           params.set("sort",        sortBy);
+      if (priceMin)         params.set("minPrice",    priceMin);
+      if (priceMax)         params.set("maxPrice",    priceMax);
+      if (inStockOnly)      params.set("inStock",     "true");
+      if (eventId)          params.set("eventId",     eventId);
 
-      const res = await apiFetch(`/products?${params.toString()}`);
+      const res  = await apiFetch(`/products?${params.toString()}`);
       const data = await res.json();
       if (res.ok) setProducts(data);
       else setError("Failed to load products.");
@@ -81,14 +89,35 @@ function ProductsPage() {
     }
   };
 
+  // ── Helpers to update URL params ──
+  const setParam = (key, value) => {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev);
+      if (value) next.set(key, value);
+      else next.delete(key);
+      return next;
+    });
+  };
+
   const clearFilters = () => {
-    setSelectedCategory("");
-    setSelectedSubCategory("");
-    setPriceMin("");
-    setPriceMax("");
-    setInStockOnly(false);
-    setSortBy("newest");
-    setSearchQuery("");
+    // Keep only eventId if present
+    setSearchParams(eventId ? { eventId } : {});
+    setSearchInput("");
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    setParam("q", searchInput.trim());
+  };
+
+  const handleCategoryChange = (catId) => {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev);
+      if (catId) next.set("category", catId);
+      else next.delete("category");
+      next.delete("subcategory"); // reset subcategory when category changes
+      return next;
+    });
   };
 
   const selectedCategoryData = categories.find(
@@ -112,7 +141,11 @@ function ProductsPage() {
               {eventId && <span className="pp-event-tag"> · Event Shopping Mode</span>}
             </span>
             <div className="pp-sort-controls">
-              <select className="pp-sort" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+              <select
+                className="pp-sort"
+                value={sortBy}
+                onChange={(e) => setParam("sort", e.target.value)}
+              >
                 <option value="newest">Newest First</option>
                 <option value="price_asc">Price: Low → High</option>
                 <option value="price_desc">Price: High → Low</option>
@@ -133,12 +166,12 @@ function ProductsPage() {
               {/* Search */}
               <div className="pp-filter-section">
                 <h4>Search</h4>
-                <form onSubmit={(e) => { e.preventDefault(); fetchProducts(); }} className="pp-search-form">
+                <form onSubmit={handleSearchSubmit} className="pp-search-form">
                   <input
                     type="text"
                     placeholder="Search products..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
                   />
                   <button type="submit">Go</button>
                 </form>
@@ -149,16 +182,20 @@ function ProductsPage() {
                 <h4>Category</h4>
                 <div className="pp-filter-options">
                   <label className={!selectedCategory ? "active" : ""}>
-                    <input type="radio" name="category" value=""
+                    <input
+                      type="radio" name="category" value=""
                       checked={!selectedCategory}
-                      onChange={() => { setSelectedCategory(""); setSelectedSubCategory(""); }} />
+                      onChange={() => handleCategoryChange("")}
+                    />
                     All Categories
                   </label>
                   {categories.map((cat) => (
                     <label key={cat.id} className={String(selectedCategory) === String(cat.id) ? "active" : ""}>
-                      <input type="radio" name="category" value={cat.id}
+                      <input
+                        type="radio" name="category" value={cat.id}
                         checked={String(selectedCategory) === String(cat.id)}
-                        onChange={() => { setSelectedCategory(cat.id); setSelectedSubCategory(""); }} />
+                        onChange={() => handleCategoryChange(cat.id)}
+                      />
                       {cat.name}
                     </label>
                   ))}
@@ -170,16 +207,21 @@ function ProductsPage() {
                 <div className="pp-filter-section">
                   <h4>Sub-Category</h4>
                   <div className="pp-filter-options">
-                    <label className={!selectedSubCategory ? "active" : ""}>
-                      <input type="radio" name="subcategory" value="" checked={!selectedSubCategory}
-                        onChange={() => setSelectedSubCategory("")} />
+                    <label className={!selectedSubCat ? "active" : ""}>
+                      <input
+                        type="radio" name="subcategory" value=""
+                        checked={!selectedSubCat}
+                        onChange={() => setParam("subcategory", "")}
+                      />
                       All
                     </label>
                     {selectedCategoryData.subcategories.map((sub) => (
-                      <label key={sub.id} className={String(selectedSubCategory) === String(sub.id) ? "active" : ""}>
-                        <input type="radio" name="subcategory" value={sub.id}
-                          checked={String(selectedSubCategory) === String(sub.id)}
-                          onChange={() => setSelectedSubCategory(sub.id)} />
+                      <label key={sub.id} className={String(selectedSubCat) === String(sub.id) ? "active" : ""}>
+                        <input
+                          type="radio" name="subcategory" value={sub.id}
+                          checked={String(selectedSubCat) === String(sub.id)}
+                          onChange={() => setParam("subcategory", sub.id)}
+                        />
                         {sub.name}
                       </label>
                     ))}
@@ -191,20 +233,28 @@ function ProductsPage() {
               <div className="pp-filter-section">
                 <h4>Price Range (₹)</h4>
                 <div className="pp-price-inputs">
-                  <input type="number" placeholder="Min" value={priceMin}
-                    onChange={(e) => setPriceMin(e.target.value)} />
+                  <input
+                    type="number" placeholder="Min"
+                    value={priceMin}
+                    onChange={(e) => setParam("minPrice", e.target.value)}
+                  />
                   <span>–</span>
-                  <input type="number" placeholder="Max" value={priceMax}
-                    onChange={(e) => setPriceMax(e.target.value)} />
+                  <input
+                    type="number" placeholder="Max"
+                    value={priceMax}
+                    onChange={(e) => setParam("maxPrice", e.target.value)}
+                  />
                 </div>
-                <button className="pp-apply-price" onClick={fetchProducts}>Apply</button>
               </div>
 
               {/* Stock */}
               <div className="pp-filter-section">
                 <label className="pp-toggle-label">
-                  <input type="checkbox" checked={inStockOnly}
-                    onChange={(e) => setInStockOnly(e.target.checked)} />
+                  <input
+                    type="checkbox"
+                    checked={inStockOnly}
+                    onChange={(e) => setParam("inStock", e.target.checked ? "true" : "")}
+                  />
                   In Stock Only
                 </label>
               </div>
@@ -238,7 +288,10 @@ function ProductsPage() {
         <div className="sm-overlay" onClick={() => setLoginOpen(false)}>
           <div className="sm-popup-box" onClick={(e) => e.stopPropagation()}>
             <button className="sm-popup-close" onClick={() => setLoginOpen(false)}>×</button>
-            <Login switchToRegister={() => { setLoginOpen(false); setRegisterOpen(true); }} onSuccess={() => setLoginOpen(false)} />
+            <Login
+              switchToRegister={() => { setLoginOpen(false); setRegisterOpen(true); }}
+              onSuccess={() => setLoginOpen(false)}
+            />
           </div>
         </div>
       )}
