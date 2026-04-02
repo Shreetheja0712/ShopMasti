@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const getOrders = async (req, res) => {
   try {
-    const orders = await prisma.order.findMany({
+    const orders = await prisma.orders.findMany({
       where: { user_id: req.user.userId },
       include: {
         items: {
@@ -74,7 +74,7 @@ const createOrder = async (req, res) => {
 
     const finalAmount = orderTotal - discountAmount;
 
-    const order = await prisma.order.create({
+    const order = await prisma.orders.create({
       data: {
         user_id: req.user.userId,
         event_id: event_id ? parseInt(event_id) : null,
