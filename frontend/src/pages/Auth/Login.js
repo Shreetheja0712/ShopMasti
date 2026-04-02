@@ -24,7 +24,7 @@ function Login({ switchToRegister, onSuccess }) {
       return;
     }
 
-     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/i.test(formData.email)) {
+     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/i.test(email)) {
       setError("Please enter a valid email address");
       return;
     }
