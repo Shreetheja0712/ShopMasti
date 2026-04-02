@@ -170,6 +170,7 @@ ShopMasti/
     ├── prisma/
     │   ├── schema.prisma
     │   └── migrations/
+    |   |__ seed.js 
     └── prisma.config.ts
 ```
 
@@ -228,7 +229,11 @@ npm start
 Frontend runs on `http://localhost:3000`, backend on `http://localhost:5000`.
 
 ---
+🔐 Default Seed Credentials
 
+|Role  | Email |  Password |
+| Admin | admin@shopmasti.com | admin123 |
+| User | testuser@shopmasti.com | user123 |
 
 ## 📡 API Overview
 
