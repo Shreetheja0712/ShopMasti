@@ -1,26 +1,37 @@
 import React, { useState, useEffect } from "react";
 import { authFetch } from "../../../utils/api";
 
-const STATUSES = ["pending", "shipped", "delivered", "cancelled"];
+
+const STATUSES = ["PENDING", "SHIPPED", "DELIVERED", "CANCELLED"];
+
+const statusStyle = (status) => {
+  switch (status) {
+    case "DELIVERED": return { background: "#dcfce7", color: "#15803d" };
+    case "SHIPPED":   return { background: "#fefce8", color: "#ca8a04" };
+    case "CANCELLED": return { background: "#fee2e2", color: "#dc2626" };
+    default:          return { background: "#eff6ff", color: "#2563eb" }; // PENDING
+  }
+};
 
 export default function AdminOrders() {
-  const [orders, setOrders]       = useState([]);
-  const [loading, setLoading]     = useState(true);
-  const [error, setError]         = useState("");
-  const [search, setSearch]       = useState("");
+  const [orders, setOrders]             = useState([]);
+  const [loading, setLoading]           = useState(true);
+  const [error, setError]               = useState("");
+  const [search, setSearch]             = useState("");
   const [filterStatus, setFilterStatus] = useState("");
   const [expandedId, setExpandedId]     = useState(null);
   const [updatingId, setUpdatingId]     = useState(null);
-  const [page, setPage]           = useState(1);
+  const [page, setPage]                 = useState(1);
   const PER_PAGE = 20;
 
   useEffect(() => { fetchOrders(); }, []);
 
   const fetchOrders = async () => {
     setLoading(true);
+    setError("");
     try {
       const res = await authFetch("/admin/orders");
-      const d = await res.json();
+      const d   = await res.json();
       if (res.ok) setOrders(d);
       else setError(d.error || "Failed to load orders.");
     } catch { setError("Server error."); }
@@ -34,11 +45,20 @@ export default function AdminOrders() {
         method: "PUT",
         body: JSON.stringify({ status: newStatus }),
       });
+      const d = await res.json();
       if (res.ok) {
-        setOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: newStatus } : o));
+        // Update local state with the status returned from server
+        setOrders(prev => prev.map(o =>
+          o.id === orderId ? { ...o, status: d.status } : o
+        ));
+      } else {
+        setError(d.error || "Failed to update status.");
       }
-    } catch { }
-    finally { setUpdatingId(null); }
+    } catch {
+      setError("Server error while updating status.");
+    } finally {
+      setUpdatingId(null);
+    }
   };
 
   const filtered = orders.filter(o => {
@@ -46,14 +66,22 @@ export default function AdminOrders() {
       String(o.id).includes(search) ||
       o.user?.username?.toLowerCase().includes(search.toLowerCase()) ||
       o.user?.email?.toLowerCase().includes(search.toLowerCase());
-    const matchStatus = !filterStatus || o.status?.toLowerCase() === filterStatus;
+    // Compare directly — both are now uppercase
+    const matchStatus = !filterStatus || o.status === filterStatus;
     return matchSearch && matchStatus;
   });
 
   const totalPages = Math.ceil(filtered.length / PER_PAGE);
   const paginated  = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
-  const statusCount = (s) => orders.filter(o => o.status?.toLowerCase() === s).length;
+  const statusCount = (s) => orders.filter(o => o.status === s).length;
+
+  // Format date safely
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "—";
+    const d = new Date(dateStr);
+    return isNaN(d) ? "—" : d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+  };
 
   return (
     <>
@@ -111,10 +139,14 @@ export default function AdminOrders() {
                       <div style={{ fontWeight: 600, color: "#131921" }}>{o.user?.username || "—"}</div>
                       <div style={{ fontSize: 11, color: "#9ca3af" }}>{o.user?.email}</div>
                     </td>
-                    <td>{o.event?.name ? <span className="badge badge-active">{o.event.name}</span> : <span style={{ color: "#9ca3af" }}>—</span>}</td>
+                    <td>
+                      {o.event?.name
+                        ? <span className="badge badge-active">{o.event.name}</span>
+                        : <span style={{ color: "#9ca3af" }}>—</span>}
+                    </td>
                     <td>{o.items?.length || 0} items</td>
                     <td style={{ fontWeight: 700 }}>₹{parseFloat(o.final_amount).toLocaleString("en-IN")}</td>
-                    <td><span className={`badge badge-${o.payment_status}`}>{o.payment_status}</span></td>
+                    <td><span className={`badge badge-${o.payment_status?.toLowerCase()}`}>{o.payment_status}</span></td>
                     <td>
                       <select
                         value={o.status}
@@ -124,24 +156,20 @@ export default function AdminOrders() {
                         style={{
                           padding: "4px 8px", borderRadius: 6, border: "1px solid #e5e7eb",
                           fontSize: 12, fontWeight: 600, cursor: "pointer",
-                          background: o.status === "delivered" ? "#dcfce7"
-                            : o.status === "shipped" ? "#fefce8"
-                            : o.status === "cancelled" ? "#fee2e2"
-                            : "#eff6ff",
-                          color: o.status === "delivered" ? "#15803d"
-                            : o.status === "shipped" ? "#ca8a04"
-                            : o.status === "cancelled" ? "#dc2626"
-                            : "#2563eb",
+                          ...statusStyle(o.status),
                         }}
                       >
                         {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
                       </select>
+                      {updatingId === o.id && <span style={{ fontSize: 11, color: "#9ca3af", marginLeft: 6 }}>Saving...</span>}
                     </td>
                     <td style={{ color: "#6b7280", fontSize: 12 }}>
-                      {new Date(o.order_date).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                      {formatDate(o.order_date)}
                     </td>
                     <td>
-                      <span style={{ fontSize: 12, color: "#9ca3af" }}>{expandedId === o.id ? "▲ Hide" : "▼ Details"}</span>
+                      <span style={{ fontSize: 12, color: "#9ca3af" }}>
+                        {expandedId === o.id ? "▲ Hide" : "▼ Details"}
+                      </span>
                     </td>
                   </tr>
 
@@ -172,9 +200,13 @@ export default function AdminOrders() {
                               Summary
                             </div>
                             <div style={{ fontSize: 13, color: "#374151", display: "flex", flexDirection: "column", gap: 5 }}>
-                              <div style={{ display: "flex", justifyContent: "space-between" }}><span>MRP</span><span>₹{parseFloat(o.order_total).toLocaleString("en-IN")}</span></div>
+                              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                <span>MRP</span><span>₹{parseFloat(o.order_total).toLocaleString("en-IN")}</span>
+                              </div>
                               {parseFloat(o.discount_amount) > 0 && (
-                                <div style={{ display: "flex", justifyContent: "space-between", color: "#16a34a" }}><span>Discount</span><span>−₹{parseFloat(o.discount_amount).toLocaleString("en-IN")}</span></div>
+                                <div style={{ display: "flex", justifyContent: "space-between", color: "#16a34a" }}>
+                                  <span>Discount</span><span>−₹{parseFloat(o.discount_amount).toLocaleString("en-IN")}</span>
+                                </div>
                               )}
                               <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 700, borderTop: "1px solid #e5e7eb", paddingTop: 6, marginTop: 2 }}>
                                 <span>Final</span><span>₹{parseFloat(o.final_amount).toLocaleString("en-IN")}</span>
@@ -198,12 +230,13 @@ export default function AdminOrders() {
               ))}
             </tbody>
           </table>
+
           {totalPages > 1 && (
             <div className="admin-pagination">
-              <span>Showing {(page-1)*PER_PAGE+1}–{Math.min(page*PER_PAGE, filtered.length)} of {filtered.length}</span>
+              <span>Showing {(page - 1) * PER_PAGE + 1}–{Math.min(page * PER_PAGE, filtered.length)} of {filtered.length}</span>
               <div className="admin-pagination-btns">
-                <button onClick={() => setPage(p => p-1)} disabled={page === 1}>← Prev</button>
-                <button onClick={() => setPage(p => p+1)} disabled={page === totalPages}>Next →</button>
+                <button onClick={() => setPage(p => p - 1)} disabled={page === 1}>← Prev</button>
+                <button onClick={() => setPage(p => p + 1)} disabled={page === totalPages}>Next →</button>
               </div>
             </div>
           )}
