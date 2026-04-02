@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Orders" ALTER COLUMN "status" SET DEFAULT 'PENDING',
+ALTER COLUMN "payment_status" SET DEFAULT 'PENDING';

@@ -154,9 +154,9 @@ model Cart {
 model Orders {
   id              Int                  @id @default(autoincrement())
   order_date      DateTime             @default(now())
-  status          String
+  status          OrderStatus          @default(PENDING)
   payment_method  String
-  payment_status  String
+  payment_status  PaymentStatus        @default(PENDING)
   order_total     Decimal              @db.Decimal(10, 2)
   discount_amount Decimal              @db.Decimal(10, 2)
   final_amount    Decimal              @db.Decimal(10, 2)
@@ -241,24 +241,7 @@ model Review {
   @@id([user_id, item_id])
 }
 
-model Order {
-  id              Int           @id @default(autoincrement())
-  order_date      DateTime      @default(now())
-  status          OrderStatus
-  payment_method  String
-  payment_status  PaymentStatus
-  order_total     Decimal       @db.Decimal(10, 2)
-  discount_amount Decimal       @db.Decimal(10, 2)
-  final_amount    Decimal       @db.Decimal(10, 2)
-  created_at      DateTime      @default(now())
-  updated_at      DateTime
-  user_id         Int
-  event_id        Int?
-  address_id      Int
 
-  @@index([address_id])
-  @@index([user_id])
-}
 
 enum OrderStatus {
   PENDING
