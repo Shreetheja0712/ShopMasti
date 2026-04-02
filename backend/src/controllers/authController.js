@@ -6,14 +6,38 @@ const register = async (req, res) => {
   try {
     const { username, email, password, confirmPassword, mobile_number } =
       req.body;
-    if (!username || !email || !password) {
-      return res
-        .status(400)
-        .json({ error: "Username, email and password are required" });
+    if (
+      !username ||
+      !email ||
+      !password ||
+      !confirmPassword ||
+      !mobile_number
+    ) {
+      return res.status(400).json({ error: "All fields are required" });
     }
     if (confirmPassword && password !== confirmPassword) {
       return res.status(400).json({ error: "Passwords do not match" });
     }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/i.test(email)) {
+      return res
+        .status(400)
+        .json({ error: "Please enter a valid email address" });
+    }
+    if (!/^\d{7,15}$/.test(mobile_number)) {
+      return res
+        .status(400)
+        .json({ error: "Phone number must be 7-15 digits" });
+    }
+    if (
+      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/.test(password)
+    ) {
+      return res.status(400).json({
+        error:
+          "Password must be at least 6 characters and include uppercase, lowercase, number, and special symbol",
+      });
+    }
+
     const existing = await prisma.user.findFirst({
       where: { OR: [{ email }, { username }] },
     });
@@ -37,15 +61,13 @@ const register = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN || "7d" },
     );
-    res
-      .status(201)
-      .json({
-        message: "User registered successfully",
-        token,
-        userId: user.id,
-        username: user.username,
-        role_id: user.role_id,
-      });
+    res.status(201).json({
+      message: "User registered successfully",
+      token,
+      userId: user.id,
+      username: user.username,
+      role_id: user.role_id,
+    });
   } catch (error) {
     console.error("Register error:", error);
     res.status(500).json({ error: "Error registering user" });
@@ -57,6 +79,12 @@ const login = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
       return res.status(400).json({ error: "Email and password are required" });
+    }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/i.test(email)) {
+      return res.status(400).json({ error: "Please enter a valid email address" });
+    }
+    if (password.length < 6) {
+      return res.status(400).json({ error: "Password must be at least 6 characters" });
     }
     const user = await prisma.user.findUnique({ where: { email } });
     if (!user) return res.status(404).json({ error: "User not found" });
@@ -70,15 +98,13 @@ const login = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN || "7d" },
     );
-    res
-      .status(200)
-      .json({
-        message: "Login successful",
-        token,
-        userId: user.id,
-        username: user.username,
-        role_id: user.role_id,
-      });
+    res.status(200).json({
+      message: "Login successful",
+      token,
+      userId: user.id,
+      username: user.username,
+      role_id: user.role_id,
+    });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ error: "Error logging in" });
