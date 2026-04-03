@@ -2,31 +2,26 @@
 // Run with: npx prisma db seed
 // Add to package.json: "prisma": { "seed": "node prisma/seed.js" }
 
-import "dotenv/config";
+const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcrypt");
-import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 
-const connectionString = process.env.DB_URL;
-const adapter = new PrismaPg({ connectionString });
-const prisma = new PrismaClient({ adapter });
-
-const img = (w: number, h: number, seed: string): string => `https://picsum.photos/seed/${seed}/${w}/${h}`;
-const banner  = (seed: string): string => img(1200, 400, seed);
-const product = (seed: string): string => img(600, 600, seed);
+const img = (w, h, seed) => `https://picsum.photos/seed/${seed}/${w}/${h}`;
+const banner  = (seed) => img(1200, 400, seed);
+const product = (seed) => img(600, 600, seed);
 
 async function main() {
   console.log("Seeding ShopMasti...");
 
   // 1. ROLES
-  await prisma.role.upsert({ where:{id:1}, update:{}, create:{id:1, name:"Admin", description:"Full access"} });
-  await prisma.role.upsert({ where:{id:2}, update:{}, create:{id:2, name:"User",  description:"Regular customer"} });
+  await prisma.role.upsert({ where:{id:1}, update:{}, create:{id:2, name:"Admin", description:"Full access"} });
+  await prisma.role.upsert({ where:{id:2}, update:{}, create:{id:1, name:"User",  description:"Regular customer"} });
 
   // 2. USERS
   const adminPass = await bcrypt.hash("admin123", 10);
   const userPass  = await bcrypt.hash("user123",  10);
-  await prisma.user.upsert({ where:{email:"admin@shopmasti.com"},    update:{}, create:{username:"admin",    email:"admin@shopmasti.com",    password:adminPass, role_id:1, mobile_number:"9000000001", country:"India"} });
-  await prisma.user.upsert({ where:{email:"testuser@shopmasti.com"}, update:{}, create:{username:"testuser", email:"testuser@shopmasti.com", password:userPass,  role_id:2, mobile_number:"9000000002", country:"India"} });
+  await prisma.user.upsert({ where:{email:"admin@shopmasti.com"},    update:{}, create:{username:"admin",    email:"admin@shopmasti.com",    password:adminPass, role_id:2, mobile_number:"9000000001", country:"India"} });
+  await prisma.user.upsert({ where:{email:"testuser@shopmasti.com"}, update:{}, create:{username:"testuser", email:"testuser@shopmasti.com", password:userPass,  role_id:1, mobile_number:"9000000002", country:"India"} });
 
   // 3. UPPER CATEGORIES
   const [ucF, ucE, ucH, ucB] = await Promise.all([
@@ -37,7 +32,7 @@ async function main() {
   ]);
 
   // 4. CATEGORIES
-  const cats: Record<string, any> = {};
+  const cats = {};
   const catDefs = [
     {name:"Men's Clothing",   uc:ucF.id}, {name:"Women's Clothing", uc:ucF.id},
     {name:"Kids' Clothing",   uc:ucF.id}, {name:"Men's Footwear",   uc:ucF.id},
@@ -55,7 +50,7 @@ async function main() {
   }
 
   // 5. SUBCATEGORIES
-  const subs: Record<string, any> = {};
+  const subs = {};
   const subDefs = [
     {name:"Formal Shirts",         cat:"Men's Clothing"},
     {name:"Casual T-Shirts",       cat:"Men's Clothing"},
@@ -127,7 +122,7 @@ async function main() {
   }
 
   // 6. EVENTS
-  const evs: Record<string, any> = {};
+  const evs = {};
   const evDefs = [
     { name:"Wedding",              desc:"Everything for the big day — bridal wear, jewellery, décor, electronics.", img:banner("wedding-1") },
     { name:"New Home Setup",       desc:"Moving in? Get furniture, appliances, kitchen essentials and décor.",      img:banner("home-1") },

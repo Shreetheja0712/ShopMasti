@@ -17,6 +17,24 @@ function Login({ switchToRegister, onSuccess }) {
     e.preventDefault();
     setError("");
     setLoading(true);
+  
+    if (!email || !password) {
+      setError("Please fill in all fields");
+      setLoading(false);
+      return;
+    }
+
+     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/i.test(email)) {
+      setError("Please enter a valid email address");
+      return;
+    }
+
+     if (password.length < 6) {
+      setError("Password must be at least 6 characters");
+      setLoading(false);
+      return;
+     }
+
     try {
       const res = await apiFetch("/auth/login", {
         method: "POST",

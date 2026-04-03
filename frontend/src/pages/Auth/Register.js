@@ -75,8 +75,8 @@ function Register({ switchToLogin }) {
     }
 
     // validate email (only gmail)
-    if (!/^[A-Z0-9._%+-]+@gmail\.com$/i.test(formData.email)) {
-      setError("Only Gmail addresses are allowed");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/i.test(formData.email)) {
+      setError("Please enter a valid email address");
       return;
     }
 
