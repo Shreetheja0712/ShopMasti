@@ -151,7 +151,7 @@ function Home() {
         </div>
 
         {/* ── Trending Now ── */}
-        <div className="offers" style={{ marginTop: 0 }}>
+        <div className="offers1" style={{ marginTop: 0 }}>
           <h1 id="of1">TRENDING NOW</h1>
         </div>
 
