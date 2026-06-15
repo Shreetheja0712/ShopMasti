@@ -24,10 +24,13 @@ const register = async (req, res) => {
         .status(400)
         .json({ error: "Please enter a valid email address" });
     }
-    if (!/^\d{7,15}$/.test(mobile_number)) {
+    // Clean mobile number (remove spaces, hyphens, and parentheses)
+    const cleanedMobile = mobile_number.replace(/[\s\-\(\)]/g, "");
+
+    if (!/^\+?\d{7,15}$/.test(cleanedMobile)) {
       return res
         .status(400)
-        .json({ error: "Phone number must be 7-15 digits" });
+        .json({ error: "Phone number must be 7-15 digits (plus sign allowed)" });
     }
     if (
       !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,}$/.test(password)
@@ -52,7 +55,7 @@ const register = async (req, res) => {
         username,
         email,
         password: hashedPassword,
-        mobile_number,
+        mobile_number: cleanedMobile,
         role_id: 1,
       },
     });
