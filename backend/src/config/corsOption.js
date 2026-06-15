@@ -1,6 +1,6 @@
 const cors = require('cors');
 
-const whitelist = ['http://localhost:3000'];
+const whitelist = ['https://shop-masti-ten.vercel.app', 'http://localhost:3000'];
 
 const corsOptions = {
   origin: (origin, callback) => {
