@@ -261,9 +261,6 @@ export default function Cart() {
   });
 
   const groups = Object.values(grouped);
-  const grandTotal = groups.reduce((s, g) => {
-    return s + g.items.reduce((ss, item) => ss + calcItemTotal(item).total, 0);
-  }, 0);
 
   return (
     <>
