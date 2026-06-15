@@ -17,10 +17,9 @@ export default function OrderConfirmation() {
   const [loading, setLoading] = useState(false);
   const [orderId, setOrderId] = useState(null);
   const [error, setError] = useState("");
-  const [loginOpen, setLoginOpen] = useState(false);
 
   useEffect(() => {
-    if (!isLoggedIn()) { setLoginOpen(true); return; }
+    if (!isLoggedIn()) { navigate("/", { state: { openLogin: true } }); return; }
     if (!items?.length) { navigate("/cart"); return; }
     fetchAddresses();
   }, [items?.length, navigate]);
@@ -60,7 +59,7 @@ export default function OrderConfirmation() {
 
   return (
     <>
-      <Navbar onOpenLogin={() => setLoginOpen(true)} />
+      <Navbar onOpenLogin={() => navigate("/", { state: { openLogin: true } })} />
       <div className="sm-page">
         <div className="oc-root">
           {/* Step indicator */}

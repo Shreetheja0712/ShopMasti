@@ -33,6 +33,12 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
+## Vercel deployment
+
+- Set `REACT_APP_API_URL` in Vercel to your backend API base URL, for example `https://your-backend-domain.com/api`.
+- Deploy the `frontend` folder as the project root.
+- The included `vercel.json` keeps React Router routes working on refresh.
+
 ### `npm run eject`
 
 **Note: this is a one-way operation. Once you `eject`, you can't go back!**

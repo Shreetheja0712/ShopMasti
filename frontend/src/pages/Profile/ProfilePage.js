@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import Login from "../Auth/Login";
 import { authFetch, isLoggedIn } from "../../utils/api";
-import { useAuth } from "../../context/AuthContext";
 import "./Profile.css";
 
 export default function ProfilePage() {
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { user, logout } = useAuth();
 
   const [tab, setTab] = useState(searchParams.get("tab") || "details");
 
