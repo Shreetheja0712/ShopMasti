@@ -6,11 +6,11 @@ const developers = [
     id: 1,
     name: "TSNV Raviteja",
     role: "CS Student",
-    image: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    bio: "",
-    github: "#",
-    linkedin: "#",
-    email: "raviteja@gmail.com",
+    image: "https://res.cloudinary.com/dys0jbwg1/image/upload/v1781621454/WhatsAppImage2026-03-28at6.25.44PM_qgeqgo.jpg",
+    bio: "Computer Science undergraduate at NIT Andhra Pradesh with interests in full-stack development, computer vision, and machine learning. Focused on developing scalable applications and applying modern technologies to create practical and impactful solutions.",
+    github: "https://github.com/RAVITEJA12158",
+    linkedin: "https://www.linkedin.com/in/raviteja-tsnv-9352b7329/",
+    email: "tsnvraviteja@gmail.com",
     portfolio: "#"
   },
   {
