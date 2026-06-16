@@ -27,7 +27,7 @@
     "jsonwebtoken": "^9.0.3",
     "nodemon": "^3.1.14",
     "prisma": "^6.19.3",
-    "uuid": "^13.0.0"
+    "uuid": "^9.0.0"
   },
   "prisma": {
     "schema": "prisma/schema.prisma",
