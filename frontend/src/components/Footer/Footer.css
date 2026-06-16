@@ -19,3 +19,40 @@
 .logo-text span {
   color: var(--color-amber);
 }
+
+.footer-links-container {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.meet-devs-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--color-pink) 0%, var(--color-pink-dark) 100%);
+  color: var(--color-white) !important;
+  padding: 10px 24px;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 15px rgba(209, 0, 93, 0.3);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  text-decoration: none;
+}
+
+.meet-devs-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(209, 0, 93, 0.5), 0 0 0 2px var(--color-amber);
+  background: linear-gradient(135deg, var(--color-pink-dark) 0%, var(--color-pink) 100%);
+}
+
+.meet-devs-btn i {
+  font-size: 1.1rem;
+  transition: transform 0.3s ease;
+}
+
+.meet-devs-btn:hover i {
+  transform: rotate(-10deg) scale(1.1);
+}

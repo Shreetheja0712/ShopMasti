@@ -13,6 +13,7 @@ import OrdersPage from "./pages/Orders/OrdersPage";
 import OrderConfirmation from "./pages/Orders/OrderConfirmation";
 import ProfilePage from "./pages/Profile/ProfilePage";
 import AdminLayout from "./pages/Admin/AdminLayout";
+import Developers from "./pages/Developers/Developers";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/order-confirmation" element={<OrderConfirmation />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/admin" element={<AdminLayout />} />
+        <Route path="/developers" element={<Developers />} />
       </Routes>
     </AuthProvider>
   );

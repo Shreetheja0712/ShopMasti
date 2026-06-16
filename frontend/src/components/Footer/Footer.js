@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./Footer.css";
 
 function Footer() {
@@ -19,6 +20,11 @@ function Footer() {
         commercial intent, and serves as a hands-on exercise to strengthen
         skills in frontend design and basic website functionality.
       </p>
+      <div className="footer-links-container">
+        <Link to="/developers" className="meet-devs-btn">
+          <i className="fas fa-code"></i> Meet the Developers
+        </Link>
+      </div>
       <p id="last">© All copy rights are reserved.</p>
     </footer>
   );
