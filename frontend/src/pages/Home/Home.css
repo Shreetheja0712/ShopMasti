@@ -195,3 +195,95 @@ body {
   align-items: center;
   justify-content: center;
 }
+
+/* Home Page Mobile Adjustments */
+@media (max-width: 768px) {
+  /* Slider Responsive Adjustments */
+  #display {
+    height: 180px !important;
+  }
+  
+  #btt1, #btt2 {
+    font-size: 32px;
+    left: 12px;
+  }
+  #btt2 {
+    right: 12px;
+    left: auto;
+  }
+  
+  .hero-content {
+    padding: 0 35px;
+  }
+  
+  .hero-content h1 {
+    font-size: 18px;
+    margin-bottom: 4px;
+  }
+  
+  .hero-content p {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+  
+  .hero-cta {
+    padding: 6px 16px;
+    font-size: 12px;
+    border-radius: var(--radius-sm);
+  }
+  
+  /* Sections titles */
+  .offers, .offers1 {
+    height: 60px;
+    font-size: 24px;
+    margin-bottom: 12px;
+  }
+  
+  #of1 {
+    font-size: 22px;
+  }
+
+  /* Grid Layouts Stacked */
+  .cl1, .cl2 {
+    flex-direction: column;
+    height: auto;
+    border: none;
+    gap: 15px;
+    padding: 10px 16px;
+  }
+  
+  .home-banner {
+    position: relative;
+    width: 100% !important;
+    height: 200px !important;
+    border-radius: var(--radius-md) !important;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .home-banner img {
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: cover;
+  }
+  
+  /* Make Tooltips static, visible, premium bottom overlays on Mobile */
+  .tooltip-text {
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(19, 25, 33, 0.85);
+    backdrop-filter: blur(2px);
+    color: white;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    white-space: normal;
+    transition: none;
+  }
+}

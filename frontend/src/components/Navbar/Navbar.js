@@ -15,6 +15,8 @@ export default function Navbar({ onOpenLogin, onOpenRegister }) {
   const [upperCategories, setUpperCategories] = useState([]);
   const [hoveredUpper, setHoveredUpper] = useState(null);
   const [cartMsg, setCartMsg] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [expandedCategory, setExpandedCategory] = useState(null);
 
   const userMenuRef = useRef(null);
   const cartRef = useRef(null);
@@ -58,6 +60,17 @@ export default function Navbar({ onOpenLogin, onOpenRegister }) {
     document.addEventListener("mousedown", handleOutside);
     return () => document.removeEventListener("mousedown", handleOutside);
   }, []);
+
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileMenuOpen]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -105,6 +118,11 @@ export default function Navbar({ onOpenLogin, onOpenRegister }) {
     <div className="navbar-wrapper">
       {/* BAR 1  */}
       <div id="bar1">
+        {/* Mobile menu toggle */}
+        <button className="mobile-toggle" aria-label="Toggle navigation menu" onClick={() => setIsMobileMenuOpen(true)}>
+          ☰
+        </button>
+
         {/* Brand name */}
         <div id="name" onClick={() => navigate("/")}>
           Shop<span>Masti</span>
@@ -358,6 +376,147 @@ export default function Navbar({ onOpenLogin, onOpenRegister }) {
           </div>
         ))}
       </div>
+
+      {/* Mobile Drawer Overlay */}
+      {isMobileMenuOpen && (
+        <div className="drawer-overlay" onClick={() => setIsMobileMenuOpen(false)}>
+          <div className="mobile-drawer" onClick={(e) => e.stopPropagation()}>
+            <div className="drawer-header">
+              <div className="drawer-brand" onClick={() => { setIsMobileMenuOpen(false); navigate("/"); }}>
+                Shop<span>Masti</span>
+              </div>
+              <button className="drawer-close" aria-label="Close menu" onClick={() => setIsMobileMenuOpen(false)}>
+                &times;
+              </button>
+            </div>
+            
+            <div className="drawer-content">
+              {/* Profile / Greeting */}
+              <div className="drawer-user-section">
+                {isLoggedIn() && user ? (
+                  <div className="drawer-user-info">
+                    <div className="drawer-avatar">
+                      {(user.username?.[0] || "U").toUpperCase()}
+                    </div>
+                    <div>
+                      <div className="drawer-username">{user.username}</div>
+                      <div className="drawer-user-subtitle">My Account</div>
+                    </div>
+                  </div>
+                ) : (
+                  <button className="drawer-login-btn" onClick={() => { setIsMobileMenuOpen(false); handleOpenLogin(); }}>
+                    Login / Register
+                  </button>
+                )}
+              </div>
+
+              {/* Main Links */}
+              <ul className="drawer-links">
+                <li onClick={() => { setIsMobileMenuOpen(false); navigate("/products"); }}>
+                  🛍️ All Products
+                </li>
+                <li onClick={() => { setIsMobileMenuOpen(false); navigate("/products"); }}>
+                  🏷️ Offers
+                </li>
+                <li onClick={() => { setIsMobileMenuOpen(false); navigate("/events"); }}>
+                  📅 Events
+                </li>
+              </ul>
+
+              {/* Collapsible Categories Section */}
+              <div className="drawer-section">
+                <div className="drawer-section-title">Shop by Category</div>
+                <div className="drawer-categories">
+                  {UPPER_CATS.map(name => {
+                    const data = getUpperData(name);
+                    const isExpanded = expandedCategory === name;
+                    return (
+                      <div key={name} className="drawer-cat-item">
+                        <div 
+                          className={`drawer-cat-header ${isExpanded ? 'active' : ''}`}
+                          onClick={() => setExpandedCategory(isExpanded ? null : name)}
+                        >
+                          <span>{name}</span>
+                          <span className="arrow">{isExpanded ? '▼' : '▶'}</span>
+                        </div>
+                        
+                        {isExpanded && (
+                          <div className="drawer-cat-subs">
+                            <div 
+                              className="drawer-sub-item all-link"
+                              onClick={() => {
+                                setIsMobileMenuOpen(false);
+                                navigate(`/products?upper=${encodeURIComponent(name)}`);
+                              }}
+                            >
+                              All {name}
+                            </div>
+                            {data?.categories?.filter(c => c.is_active).map(cat => (
+                              <div key={cat.id} className="drawer-cat-group">
+                                <div 
+                                  className="drawer-subcat-title"
+                                  onClick={() => {
+                                    setIsMobileMenuOpen(false);
+                                    navigate(`/products?category=${cat.id}`);
+                                  }}
+                                >
+                                  {cat.name}
+                                </div>
+                                <ul>
+                                  {cat.subcategories?.filter(s => s.is_active).map(sub => (
+                                    <li 
+                                      key={sub.id}
+                                      onClick={() => {
+                                        setIsMobileMenuOpen(false);
+                                        navigate(`/products?subcategory=${sub.id}`);
+                                      }}
+                                    >
+                                      {sub.name}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* User Account Links if Logged In */}
+              {isLoggedIn() && user && (
+                <div className="drawer-section">
+                  <div className="drawer-section-title">Account Settings</div>
+                  <ul className="drawer-account-links">
+                    <li onClick={() => { setIsMobileMenuOpen(false); navigate("/profile"); }}>
+                      👤 My Profile
+                    </li>
+                    <li onClick={() => { setIsMobileMenuOpen(false); navigate("/orders"); }}>
+                      📦 My Orders
+                    </li>
+                    <li onClick={() => { setIsMobileMenuOpen(false); navigate("/profile?tab=addresses"); }}>
+                      📍 Saved Addresses
+                    </li>
+                    <li onClick={() => { setIsMobileMenuOpen(false); navigate("/profile?tab=password"); }}>
+                      🔒 Reset Password
+                    </li>
+                    {user.role_id === 2 && (
+                      <li onClick={() => { setIsMobileMenuOpen(false); navigate("/admin"); }}>
+                        ⚙️ Admin Panel
+                      </li>
+                    )}
+                    <li className="drawer-signout" onClick={() => { setIsMobileMenuOpen(false); handleLogout(); }}>
+                      🚪 Sign Out
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

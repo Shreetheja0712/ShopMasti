@@ -52,6 +52,14 @@
   --navbar-total:     100px;
 }
 
+@media (max-width: 768px) {
+  :root {
+    --navbar-bar1:    110px;
+    --navbar-bar2:    0px;
+    --navbar-total:   110px;
+  }
+}
+
 
 *, *::before, *::after {
   box-sizing: border-box;

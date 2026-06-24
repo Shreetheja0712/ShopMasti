@@ -67,8 +67,8 @@ function Home() {
         }}
       />
 
-      {/* Push content below fixed navbar (75px bar1 + 28px bar2) */}
-      <div style={{ paddingTop: "103px" }}>
+      {/* Push content below fixed navbar using responsive design tokens */}
+      <div className="sm-page" style={{ minHeight: "auto" }}>
         {/* ── Hero Slider ── */}
         <div
           id="display"
